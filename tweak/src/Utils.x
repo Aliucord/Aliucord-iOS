@@ -47,7 +47,7 @@ void confirm(NSString *title, NSString *message, void (^confirmed)(void)) {
 
   UIAlertAction *cancelButton = [UIAlertAction
                                   actionWithTitle:@"Cancel"
-                                  style:UIAlertActionStyleDefault
+                                  style:UIAlertActionStyleCancel
                                   handler:nil];
 
   [alert addAction:cancelButton];
