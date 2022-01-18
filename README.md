@@ -18,13 +18,13 @@ Source for `Aliucord.dylib` can be found [here](https://github.com/Aliucord/Aliu
 To patch the Discord IPA, you can use the script provided by `patcher/`, pre-compilled binaries can be found in the `build/` folder.  
 
 ```shell
-./build/patcher_<os> -d ../files/Discord.ipa -i ../files/icons.png -h ../files/hermes
+./build/patcher_<os> -d ../files/Discord.ipa -i ../files/icons.zip -h ../files/hermes
 ```
 
 or you can run it from sources (with Go installed):
 
 ```shell
-go run cmds/patcher/main.go -d ../files/Discord.ipa -i ../files/icons.png -h ../files/hermes
+go run cmds/patcher/main.go -d ../files/Discord.ipa -i ../files/icons.zip -h ../files/hermes
 ```
 
 If everything goes well, it should output a file named `Aliucord.ipa` ready to be installed on your device!
