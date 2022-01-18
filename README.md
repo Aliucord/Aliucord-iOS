@@ -1,6 +1,7 @@
 # Aliucord iOS
 
 This repo contains all the projects and files related to Aliucord iOS.  
+Current tested build: **110.0 (29700)**.  
 
 ## 1. Set up
 
