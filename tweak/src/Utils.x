@@ -50,8 +50,8 @@ void confirm(NSString *title, NSString *message, void (^confirmed)(void)) {
                                   style:UIAlertActionStyleDefault
                                   handler:nil];
 
-  [alert addAction:confirmButton];
   [alert addAction:cancelButton];
+  [alert addAction:confirmButton];
 
   UIViewController *viewController = [[[[UIApplication sharedApplication] delegate] window] rootViewController];
   [viewController presentViewController:alert animated:YES completion:nil];
