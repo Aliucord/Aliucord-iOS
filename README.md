@@ -8,7 +8,7 @@ Current tested build: **110.0 (29700)**.
 All the files required to use Alicuord iOS are provided in `files/` directory.  
 
 Source for `hermes` can be found [here](https://github.com/Aliucord/hermes/tree/aliucord-ios), built using `utils/build-ios-framework.sh`.  
-Source for `Aliucord.dylib` can be found [here](https://github.com/Aliucord/Aliucord-iOS/tweak), requires theos to be built.  
+Source for `Aliucord.dylib` can be found [here](tweak), requires theos to be built.  
 
 `Discord.ipa` comes from the App Store, although it is decrypted using bfdecrypt so we can change files and sideload without any issues.  
 `icons.zip` is just a bunch of icons that will be injected into the Discord app.  
