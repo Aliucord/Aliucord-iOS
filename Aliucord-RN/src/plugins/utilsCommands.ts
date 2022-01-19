@@ -6,7 +6,6 @@ import { ApplicationCommandOptionType, ApplicationCommandTarget, ApplicationComm
 export function injectCommands() {
   const commandsModule = getModule(m => m.getBuiltInCommands, false);
 
-  // Add commands
   const aliucordCommands: Command[] = [{
     id: "websocket-devtools",
     name: "websocket",
@@ -28,8 +27,33 @@ export function injectCommands() {
 
       connectWebsocket(host);
     },
+  }, {
+    id: "debug-command",
+    name: "doctor",
+    description: "Print out your device information.",
+    applicationId: "-3",
+
+    target: ApplicationCommandTarget.Chat,
+    type: ApplicationCommandType.BuiltInText,
+
+    execute: function(args) {
+      return {
+        content: "Sexo"
+      };
+    }
+  }, {
+    id: "reload-command",
+    name: "reload",
+    description: "Reload Discord.",
+    applicationId: "-3",
+
+    target: ApplicationCommandTarget.Chat,
+    type: ApplicationCommandType.BuiltIn,
+
+    execute: function(args) {
+      getModule(m => m.NativeModules).NativeModules.BundleUpdaterManager.reload();
+    }
   }];
 
-  commandsModule.exports.BUILT_IN_COMMANDS_ORIGINAL.push(...aliucordCommands);
   commandsModule.exports.BUILT_IN_COMMANDS.push(...aliucordCommands);
 }
