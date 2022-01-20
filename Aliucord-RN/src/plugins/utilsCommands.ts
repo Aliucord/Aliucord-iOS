@@ -37,8 +37,17 @@ export function injectCommands() {
     type: ApplicationCommandType.BuiltInText,
 
     execute: function(args) {
+      const nativeModules = getModule(m => m.NativeModules).NativeModules;
+      const infoDictionary = nativeModules.InfoDictionaryManager;
+      const deviceManager = nativeModules.DCDDeviceManager;
+
+      let content = "**Debug Info:**\n";
+      content += `> Discord: ${infoDictionary.Version} (${infoDictionary.Build})\n`;
+      content += `> Device: ${deviceManager.device}\n`;
+      content += `> System: ${deviceManager.systemVersion}\n`;
+
       return {
-        content: "Sexo"
+        content
       };
     }
   }, {
