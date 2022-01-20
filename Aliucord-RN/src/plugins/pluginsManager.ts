@@ -1,13 +1,12 @@
+import { Clyde, Commands } from "aliucord-api";
+import { ApplicationCommandOptionType, ApplicationCommandTarget, ApplicationCommandType, Command, Section } from "aliucord-api/dist/types/commands";
+
 import { getModule } from "../utils/modules";
 import { sendCommand } from "../utils/native";
 
-import { ApplicationCommandOptionType, ApplicationCommandTarget, ApplicationCommandType, Command, Section } from "../types/commands";
-
 export function injectPluginsManager() {
   const commandsModule = getModule(m => m.getBuiltInCommands, false);
-  const clydeModule = getModule(m => m.default?.sendBotMessage, true);
 
-  // Add Aliucord section
   const aliucordSection: Section = {
     id: "-3",
     type: 0,
@@ -20,7 +19,6 @@ export function injectPluginsManager() {
     [aliucordSection.id]: aliucordSection
   };
 
-  // Command used to list installed plugins
   const listPluginsCommand: Command = {
     id: "installed-plugins",
     applicationId: aliucordSection.id,
@@ -36,12 +34,11 @@ export function injectPluginsManager() {
 
       sendCommand("list-plugins").then((response) => {
         const pluginsList = response.data;
-        clydeModule.default.sendBotMessage(channel.id, pluginsList == "" ? "No plugins installed." : `**Plugins installed (${pluginsList.split(",").length})**: ${pluginsList.split(",").join(", ")}`);
+        Clyde.sendReply(channel.id, pluginsList == "" ? "No plugins installed." : `**Plugins installed (${pluginsList.split(",").length})**: ${pluginsList.split(",").join(", ")}`);
       });
     },
   };
 
-  // Command used to install a plugin
   const installPluginCommand: Command = {
     id: "install-plugin",
     applicationId: aliucordSection.id,
@@ -64,12 +61,11 @@ export function injectPluginsManager() {
       const channel = message.channel;
 
       sendCommand("install-plugin", [url]).then((response) => {
-        clydeModule.default.sendBotMessage(channel.id, response.data);
+        Clyde.sendReply(channel.id, response.data);
       });
     }
   };
 
-  // Command used to uinstall a plugin
   const uninstallPluginCommand: Command = {
     id: "uninstall-plugin",
     applicationId: aliucordSection.id,
@@ -88,12 +84,11 @@ export function injectPluginsManager() {
     }],
 
     execute: (args, message) => {
-      console.log(args);
       const name = args[0].value;
       const channel = message.channel;
 
       sendCommand("uninstall-plugin", [name]).then((response) => {
-        clydeModule.default.sendBotMessage(channel.id, response.data);
+        Clyde.sendReply(channel.id, response.data);
       });
     }
   };
@@ -104,5 +99,5 @@ export function injectPluginsManager() {
     uninstallPluginCommand
   ];
 
-  commandsModule.exports.BUILT_IN_COMMANDS.push(...aliucordCommands);
+  Commands.registerCommands(aliucordCommands);
 }

@@ -27,6 +27,7 @@
     "rollup-plugin-esbuild": "^4.8.2"
   },
   "dependencies": {
+    "aliucord-api": "github:Aliucord/Aliucord-API",
     "uuid": "^8.3.2"
   }
 }

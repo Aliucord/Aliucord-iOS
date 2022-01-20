@@ -1,16 +1,15 @@
+import { Commands } from "aliucord-api";
+import { ApplicationCommandOptionType, ApplicationCommandTarget, ApplicationCommandType, Command } from "aliucord-api/dist/types/commands";
+
 import { getModule } from "../utils/modules";
 import { connectWebsocket } from "./websocketDebug";
 
-import { ApplicationCommandOptionType, ApplicationCommandTarget, ApplicationCommandType, Command } from "../types/commands";
-
 export function injectCommands() {
-  const commandsModule = getModule(m => m.getBuiltInCommands, false);
-
   const aliucordCommands: Command[] = [{
     id: "websocket-devtools",
     name: "websocket",
     description: "Connect to the websocket devtools.",
-    applicationId: "-3",
+    applicationId: Commands.AliucordSectionID,
 
     target: ApplicationCommandTarget.Chat,
     type: ApplicationCommandType.BuiltIn,
@@ -31,7 +30,7 @@ export function injectCommands() {
     id: "debug-command",
     name: "doctor",
     description: "Print out your device information.",
-    applicationId: "-3",
+    applicationId: Commands.AliucordSectionID,
 
     target: ApplicationCommandTarget.Chat,
     type: ApplicationCommandType.BuiltInText,
@@ -54,7 +53,7 @@ export function injectCommands() {
     id: "reload-command",
     name: "reload",
     description: "Reload Discord.",
-    applicationId: "-3",
+    applicationId: Commands.AliucordSectionID,
 
     target: ApplicationCommandTarget.Chat,
     type: ApplicationCommandType.BuiltIn,
@@ -64,5 +63,5 @@ export function injectCommands() {
     }
   }];
 
-  commandsModule.exports.BUILT_IN_COMMANDS.push(...aliucordCommands);
+  Commands.registerCommands(aliucordCommands);
 }
