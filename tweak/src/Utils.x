@@ -27,6 +27,13 @@ void alert(NSString *message) {
                                 message:message
                                 preferredStyle:UIAlertControllerStyleAlert];
 
+  UIAlertAction *confirmButton = [UIAlertAction
+                                    actionWithTitle:@"Ok"
+                                    style:UIAlertActionStyleDefault
+                                    handler:nil];
+
+  [alert addAction:confirmButton];
+
   UIViewController *viewController = [[[[UIApplication sharedApplication] delegate] window] rootViewController];
   [viewController presentViewController:alert animated:YES completion:nil];
 }
