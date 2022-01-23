@@ -1,16 +1,16 @@
-import { defineConfig, Plugin } from "rollup";
+import { defineConfig } from "rollup";
 import esbuild from "rollup-plugin-esbuild";
 import commonjs from "@rollup/plugin-commonjs";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
 
 export default defineConfig({
-  input: "src/index.tsx",
+  input: "src/index.ts",
   output: [
     { file: "dist/Aliucord.js", format: "cjs", strict: false },
   ],
   plugins: [
     nodeResolve(),
     commonjs(),
-    esbuild({ target: "es2019", minify: true, })
+    esbuild({ target: "es2019", minify: true }),
   ]
 });
