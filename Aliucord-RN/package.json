@@ -22,7 +22,6 @@
     "esbuild": "^0.14.9",
     "esbuild-darwin-arm64": "^0.14.10",
     "eslint": "^8.5.0",
-    "eslint-plugin-react": "^7.28.0",
     "rollup": "^2.62.0",
     "rollup-plugin-esbuild": "^4.8.2"
   },
