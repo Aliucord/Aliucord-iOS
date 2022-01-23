@@ -1,4 +1,5 @@
-import { Clyde, Commands } from "aliucord-api";
+import { registerCommands } from "aliucord-api/dist/modules/commands";
+import { sendReply } from "aliucord-api/dist/modules/clyde";
 import { ApplicationCommandOptionType, ApplicationCommandTarget, ApplicationCommandType, Command, Section } from "aliucord-api/dist/types/commands";
 
 import { getModule } from "../utils/modules";
@@ -34,7 +35,7 @@ export function injectPluginsManager() {
 
       sendCommand("list-plugins").then((response) => {
         const pluginsList = response.data;
-        Clyde.sendReply(channel.id, pluginsList == "" ? "No plugins installed." : `**Plugins installed (${pluginsList.split(",").length})**: ${pluginsList.split(",").join(", ")}`);
+        sendReply(channel.id, pluginsList == "" ? "No plugins installed." : `**Plugins installed (${pluginsList.split(",").length})**: ${pluginsList.split(",").join(", ")}`);
       });
     },
   };
@@ -61,7 +62,7 @@ export function injectPluginsManager() {
       const channel = message.channel;
 
       sendCommand("install-plugin", [url]).then((response) => {
-        Clyde.sendReply(channel.id, response.data);
+        sendReply(channel.id, response.data);
       });
     }
   };
@@ -88,7 +89,7 @@ export function injectPluginsManager() {
       const channel = message.channel;
 
       sendCommand("uninstall-plugin", [name]).then((response) => {
-        Clyde.sendReply(channel.id, response.data);
+        sendReply(channel.id, response.data);
       });
     }
   };
@@ -99,5 +100,5 @@ export function injectPluginsManager() {
     uninstallPluginCommand
   ];
 
-  Commands.registerCommands(aliucordCommands);
+  registerCommands(aliucordCommands);
 }

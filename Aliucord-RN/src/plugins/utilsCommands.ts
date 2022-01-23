@@ -1,7 +1,7 @@
-import { Commands } from "aliucord-api";
+import { AliucordSectionID, registerCommands } from "aliucord-api/dist/modules/commands";
+import { getBuild, getDevice, getSystemVersion, getVersion, reloadDiscord } from "aliucord-api/dist/modules/native";
 import { ApplicationCommandOptionType, ApplicationCommandTarget, ApplicationCommandType, Command } from "aliucord-api/dist/types/commands";
 
-import { getModule } from "../utils/modules";
 import { connectWebsocket } from "./websocketDebug";
 
 export function injectCommands() {
@@ -9,7 +9,7 @@ export function injectCommands() {
     id: "websocket-devtools",
     name: "websocket",
     description: "Connect to the websocket devtools.",
-    applicationId: Commands.AliucordSectionID,
+    applicationId: AliucordSectionID,
 
     target: ApplicationCommandTarget.Chat,
     type: ApplicationCommandType.BuiltIn,
@@ -21,29 +21,24 @@ export function injectCommands() {
       required: true,
     }],
 
-    execute: function (args, message) {
+    execute: (args) => {
       const host = args[0].value;
-
       connectWebsocket(host);
     },
   }, {
     id: "debug-command",
-    name: "doctor",
+    name: "debug",
     description: "Print out your device information.",
-    applicationId: Commands.AliucordSectionID,
+    applicationId: AliucordSectionID,
 
     target: ApplicationCommandTarget.Chat,
     type: ApplicationCommandType.BuiltInText,
 
-    execute: function(args) {
-      const nativeModules = getModule(m => m.NativeModules).NativeModules;
-      const infoDictionary = nativeModules.InfoDictionaryManager;
-      const deviceManager = nativeModules.DCDDeviceManager;
-
+    execute: () => {
       let content = "**Debug Info:**\n";
-      content += `> Discord: ${infoDictionary.Version} (${infoDictionary.Build})\n`;
-      content += `> Device: ${deviceManager.device}\n`;
-      content += `> System: ${deviceManager.systemVersion}\n`;
+      content += `> Discord: ${getVersion()} (${getBuild()})\n`;
+      content += `> Device: ${getDevice()}\n`;
+      content += `> System: ${getSystemVersion()}\n`;
 
       return {
         content
@@ -53,15 +48,15 @@ export function injectCommands() {
     id: "reload-command",
     name: "reload",
     description: "Reload Discord.",
-    applicationId: Commands.AliucordSectionID,
+    applicationId: AliucordSectionID,
 
     target: ApplicationCommandTarget.Chat,
     type: ApplicationCommandType.BuiltIn,
 
     execute: function(args) {
-      getModule(m => m.NativeModules).NativeModules.BundleUpdaterManager.reload();
+      reloadDiscord();
     }
   }];
 
-  Commands.registerCommands(aliucordCommands);
+  registerCommands(aliucordCommands);
 }
