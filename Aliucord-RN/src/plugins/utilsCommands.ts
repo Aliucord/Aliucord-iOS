@@ -1,6 +1,6 @@
 import { AliucordSectionID, registerCommands } from "aliucord-api/dist/modules/commands";
 import { getBuild, getDevice, getSystemVersion, getVersion, reloadDiscord } from "aliucord-api/dist/modules/native";
-import { ApplicationCommandOptionType, ApplicationCommandTarget, ApplicationCommandType, Command } from "aliucord-api/dist/types/commands";
+import { ApplicationCommandOptionType, ApplicationCommandInputType, ApplicationCommandType, Command } from "aliucord-api/dist/types/commands";
 
 import { connectWebsocket } from "./websocketDebug";
 
@@ -11,8 +11,8 @@ export function injectCommands() {
     description: "Connect to the websocket devtools.",
     applicationId: AliucordSectionID,
 
-    target: ApplicationCommandTarget.Chat,
-    type: ApplicationCommandType.BuiltIn,
+    type: ApplicationCommandType.Chat,
+    inputType: ApplicationCommandInputType.BuiltIn,
 
     options: [{
       name: "host",
@@ -31,8 +31,8 @@ export function injectCommands() {
     description: "Print out your device information.",
     applicationId: AliucordSectionID,
 
-    target: ApplicationCommandTarget.Chat,
-    type: ApplicationCommandType.BuiltInText,
+    type: ApplicationCommandType.Chat,
+    inputType: ApplicationCommandInputType.BuiltInText,
 
     execute: () => {
       let content = "**Debug Info:**\n";
@@ -50,8 +50,8 @@ export function injectCommands() {
     description: "Reload Discord.",
     applicationId: AliucordSectionID,
 
-    target: ApplicationCommandTarget.Chat,
-    type: ApplicationCommandType.BuiltIn,
+    type: ApplicationCommandType.Chat,
+    inputType: ApplicationCommandInputType.BuiltIn,
 
     execute: function(args) {
       reloadDiscord();

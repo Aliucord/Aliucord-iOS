@@ -1,6 +1,6 @@
 import { registerCommands } from "aliucord-api/dist/modules/commands";
 import { sendReply } from "aliucord-api/dist/modules/clyde";
-import { ApplicationCommandOptionType, ApplicationCommandTarget, ApplicationCommandType, Command, Section } from "aliucord-api/dist/types/commands";
+import { ApplicationCommandOptionType, ApplicationCommandInputType, ApplicationCommandType, Command, Section } from "aliucord-api/dist/types/commands";
 
 import { getModule } from "../utils/modules";
 import { sendCommand } from "../utils/native";
@@ -27,8 +27,8 @@ export function injectPluginsManager() {
     name: "plugins",
     description: "List installed plugins.",
 
-    target: ApplicationCommandTarget.Chat,
-    type: ApplicationCommandType.BuiltIn,
+    type: ApplicationCommandType.Chat,
+    inputType: ApplicationCommandInputType.BuiltIn,
 
     execute: (args, message) => {
       const channel = message.channel;
@@ -47,8 +47,8 @@ export function injectPluginsManager() {
     name: "install",
     description: "Install a plugin.",
 
-    target: ApplicationCommandTarget.Chat,
-    type: ApplicationCommandType.BuiltIn,
+    type: ApplicationCommandType.Chat,
+    inputType: ApplicationCommandInputType.BuiltIn,
 
     options: [{
       name: "plugin",
@@ -74,8 +74,8 @@ export function injectPluginsManager() {
     name: "uninstall",
     description: "Uninstall a plugin.",
 
-    target: ApplicationCommandTarget.Chat,
-    type: ApplicationCommandType.BuiltIn,
+    type: ApplicationCommandType.Chat,
+    inputType: ApplicationCommandInputType.BuiltIn,
 
     options: [{
       name: "plugin",
