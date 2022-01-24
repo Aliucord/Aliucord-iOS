@@ -1,10 +1,16 @@
 declare const __r: (moduleId: number) => any;
 declare const modules: { [id: number]: any };
 
+function modulesBlacklist(i) {
+  if (i >= 940 && i <= 968) return true;
+  if (i == 199 || i == 432 || i == 433 || i == 444 || i == 445 || i == 456) return true;
+
+  return false;
+}
+
 export function getModule(filter: (module: any) => boolean, exports = true): any {
   const id = Object.keys(modules).map(i => Number(i)).find(i => {
-    if (i >= 940 && i <= 968) return false;
-    if (i == 199 || i == 432 || i == 433 || i == 444 || i == 445 || i == 456) return false;
+   if (modulesBlacklist(i)) return;
 
     return __r(i) && filter(__r(i));
   });
@@ -15,4 +21,15 @@ export function getModule(filter: (module: any) => boolean, exports = true): any
   return exports ? module.exports : module;
 }
 
+export function getModules(filter: (module: any) => boolean): number[] {
+  const ids = Object.keys(modules).map(i => Number(i)).filter(i => {
+    if (modulesBlacklist(i)) return;
+
+    return __r(i) && filter(__r(i));
+  });
+
+  return ids;
+}
+
 window["getModule"] = getModule;
+window["getModules"] = getModules;
