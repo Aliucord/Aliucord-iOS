@@ -30,6 +30,3 @@ export function getModules(filter: (module: any) => boolean): number[] {
 
   return ids;
 }
-
-window["getModule"] = getModule;
-window["getModules"] = getModules;

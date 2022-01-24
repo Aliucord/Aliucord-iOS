@@ -1,20 +1,38 @@
 import { getModule } from "./modules";
 
-const assets = [];
-
 const assetsModule = getModule(m => m.registerAsset);
-const _registerAsset = assetsModule.registerAsset;
-assetsModule.registerAsset = (asset: Record<string, string>) => {
-  assets.push(asset.name);
-  _registerAsset(asset);
-}
 
 function getAssetByName(name: string) {
-  return assets.find(a => name);
+  let asset;
+
+  let counter = 1;
+  while(true) {
+    asset = assetsModule.getAssetByID(counter);
+
+    if (asset === undefined) break;
+    if (asset.name === name) break;
+    counter++;
+  }
+
+  return asset;
 }
 
-window["getAssetByName"] = getAssetByName;
+function getAssets(): Record<string, string>[] {
+  const assets = [];
+
+  let counter = 1;
+  while(true) {
+    const asset = assetsModule.getAssetByID(counter);
+    if (asset === undefined) break;
+
+    assets.push(asset);
+    counter++;
+  }
+
+  return assets;
+}
 
 export {
-  getAssetByName
+  getAssetByName,
+  getAssets
 }
