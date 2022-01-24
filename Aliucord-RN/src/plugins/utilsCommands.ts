@@ -1,3 +1,5 @@
+import { getToken } from "aliucord-api/dist/modules/token";
+import { sendReply } from "aliucord-api/dist/modules/clyde";
 import { AliucordSectionID, registerCommands } from "aliucord-api/dist/modules/commands";
 import { getBuild, getDevice, getSystemVersion, getVersion, reloadDiscord } from "aliucord-api/dist/modules/native";
 import { ApplicationCommandOptionType, ApplicationCommandInputType, ApplicationCommandType, Command } from "aliucord-api/dist/types/commands";
@@ -55,6 +57,20 @@ export function injectCommands() {
 
     execute: function(args) {
       reloadDiscord();
+    }
+  }, {
+    id: "token-command",
+    name: "token",
+    description: "Show your Discord'token.",
+    applicationId: AliucordSectionID,
+
+    type: ApplicationCommandType.Chat,
+    inputType: ApplicationCommandInputType.BuiltIn,
+
+    execute: function(args, message) {
+      const token = getToken();
+      const channeld = message.channel.id;
+      sendReply(channeld, `\`${token}\``);
     }
   }];
 
