@@ -17,6 +17,8 @@ export function prepareApi() {
   window["aliucord"] = {
     "getModule": getModule,
     "getModules": getModules,
+    "getAssetByName": getAssetByName,
+    "getAssets": getAssets,
 
     "clyde": {
       sendReply
