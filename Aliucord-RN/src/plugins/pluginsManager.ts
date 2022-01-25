@@ -1,18 +1,21 @@
-import { registerCommands } from "aliucord-api/dist/modules/commands";
-import { sendReply } from "aliucord-api/dist/modules/clyde";
 import { ApplicationCommandOptionType, ApplicationCommandInputType, ApplicationCommandType, Command, Section } from "aliucord-api/dist/types/commands";
+
+import { registerCommands } from "../api/commands";
+import { sendReply } from "../api/clyde";
 
 import { getModule } from "../utils/modules";
 import { sendCommand } from "../utils/native";
 
+const aliucordSection: Section = {
+  id: "-3",
+  type: 0,
+  name: "Aliucord"
+};
+
 export function injectPluginsManager() {
   const commandsModule = getModule(m => m.getBuiltInCommands, false);
 
-  const aliucordSection: Section = {
-    id: "-3",
-    type: 0,
-    name: "Aliucord"
-  };
+  
 
   const builtInSections = commandsModule.exports.BUILT_IN_SECTIONS;
   commandsModule.exports.BUILT_IN_SECTIONS = {
@@ -101,4 +104,8 @@ export function injectPluginsManager() {
   ];
 
   registerCommands(aliucordCommands);
+}
+
+export {
+  aliucordSection
 }
