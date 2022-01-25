@@ -3,59 +3,26 @@ import { getModule } from "../utils/modules";
 const restModule = getModule(m => m.default?.getAPIBaseURL);
 
 async function get(data) {
-  return new Promise((resolve, reject) => {
-    restModule.default.get(data).then((response) => {
-      resolve(response);
-    }).catch((err: any) => {
-      reject(err);
-    });
-  });
+  return restModule.default.get(data);
 }
 
 async function post(data) {
-  return new Promise((resolve, reject) => {
-    restModule.default.post(data).then((response) => {
-      resolve(response);
-    }).catch((err: any) => {
-      reject(err);
-    });
-  });
+  return restModule.default.post(data);
 }
 
 async function put(data) {
-  return new Promise((resolve, reject) => {
-    restModule.default.put(data).then((response) => {
-      resolve(response);
-    }).catch((err: any) => {
-      reject(err);
-    });
-  });
+  return restModule.default.put(data);
 }
 
-/**
- * Do a PATCH request
- */
 async function patch(data) {
-  return new Promise((resolve, reject) => {
-    restModule.default.patch(data).then((response) => {
-      resolve(response);
-    }).catch((err: any) => {
-      reject(err);
-    });
-  });
+  return restModule.default.patch(data);
 }
 
 /**
  * Do a DELETE request
  */
 async function _delete(data) {
-  return new Promise((resolve, reject) => {
-    restModule.default.delete(data).then((response) => {
-      resolve(response);
-    }).catch((err: any) => {
-      reject(err);
-    });
-  });
+  return restModule.default.delete(data);
 }
 
 async function getAPIBaseURL() {
