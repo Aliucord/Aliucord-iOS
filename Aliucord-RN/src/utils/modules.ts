@@ -2,9 +2,6 @@ declare const __r: (moduleId: number) => any;
 declare const modules: { [id: number]: any };
 
 function modulesBlacklist(i) {
-  // Skip other references to window, global, ...
-  if (i == 22 || i == 83 || i == 607 || i == 608) return true;
-
   // Importing these changes the locale
   if (i >= 940 && i <= 968) return true;
 
