@@ -3,10 +3,11 @@ import { getAssetByName, getAssets } from "./utils/assets";
 
 import { sendReply } from "./api/clyde";
 import { registerCommands } from "./api/commands";
-import { show } from "./api/dialog";
+import { showDialog } from "./api/dialog";
 import { reloadDiscord, getVersion, getBuild, getDevice, getSystemVersion } from "./api/native";
 import { get, post, put, patch, _delete, getAPIBaseURL } from "./api/rest";
 import { getItem, setItem, removeItem } from "./api/storage";
+import { showToast } from "./api/toast";
 import { getToken, setToken, hideToken, showToken, removeToken } from "./api/token";
 import { fetchCurrentUser, fetchProfile, getUser } from "./api/users";
 
@@ -29,7 +30,7 @@ export function prepareApi() {
     },
 
     "dialog": {
-      show
+      showDialog
     },
 
     "native": {
@@ -53,6 +54,10 @@ export function prepareApi() {
       getItem,
       setItem,
       removeItem
+    },
+
+    "toast": {
+      showToast
     },
 
     "token": {
