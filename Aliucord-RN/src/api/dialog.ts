@@ -2,10 +2,10 @@ import { getModule } from "../utils/modules";
 
 const dialogModule = getModule((m) => m.default?.show);
 
-function show(options) {
+function showDialog(options) {
   dialogModule.default.show(options);
 }
 
 export {
-  show
+  showDialog
 }
