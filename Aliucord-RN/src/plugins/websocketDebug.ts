@@ -1,3 +1,5 @@
+import { showToast } from "../api/toast";
+
 declare const nativeLoggingHook: (message: string, level: number) => void;
 
 let socket: WebSocket;
@@ -22,8 +24,30 @@ function connectWebsocket(host: string) {
 
   socket = new WebSocket(`ws://${host}`);
 
-  socket.addEventListener("open", () => console.log("Connected with debug websocket"));
-  socket.addEventListener("error", (err: any) => console.log("Error with debug websocket: ", err.message));
+  socket.addEventListener("open", () => {
+    console.log("Connected with debug websocket");
+
+    showToast({
+      content: "Connected to the websocket server."
+    });
+  });
+  
+  socket.addEventListener("error", (err: any) => {
+    console.log("Error with debug websocket: ", err.message)
+
+    showToast({
+      content: "An error occured with the websocket connection."
+    });
+  });
+
+  socket.addEventListener("close", (err: any) => {
+    console.log("Error with debug websocket: ", err.message)
+
+    showToast({
+      content: "The websocket connection has been closed."
+    });
+  });
+
   socket.addEventListener("message", message => {
     try {
       console.log(eval(message.data));
@@ -33,7 +57,12 @@ function connectWebsocket(host: string) {
   });
 }
 
+function sendMessage(message: string) {
+  if (socket?.readyState === WebSocket.OPEN) socket.send(message);
+}
+
 export {
   setUpDebugWS,
-  connectWebsocket
+  connectWebsocket,
+  sendMessage
 };
