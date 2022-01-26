@@ -14,7 +14,10 @@ function getAssetByName(name: string) {
     counter++;
   }
 
-  return asset;
+  return {
+    id: counter,
+    ...asset
+  };
 }
 
 function getAssets(): Record<string, string>[] {
@@ -25,7 +28,11 @@ function getAssets(): Record<string, string>[] {
     const asset = assetsModule.getAssetByID(counter);
     if (asset === undefined) break;
 
-    assets.push(asset);
+    assets.push({
+      id: counter,
+      ...asset
+    });
+    
     counter++;
   }
 
