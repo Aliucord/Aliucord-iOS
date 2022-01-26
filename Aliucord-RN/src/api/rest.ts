@@ -18,9 +18,6 @@ async function patch(data) {
   return restModule.default.patch(data);
 }
 
-/**
- * Do a DELETE request
- */
 async function _delete(data) {
   return restModule.default.delete(data);
 }
