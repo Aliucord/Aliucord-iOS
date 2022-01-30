@@ -86,39 +86,56 @@ export function injectCommands() {
       const channeld = message.channel.id;
       const modules = window["modules"];
 
-      for (const m of Object.keys(modules)) {
-        try {
-          // Requiring all modules so all assets get loaded into memory
-          window["__r"](Number(m));
-          const module = modules[m];
+      const prettyStringify = (input) => {
+        let cache = [];
 
-          // Skip modules with no exports
-          if (Object.keys(module.publicModule.exports).length === 0) continue;
-
-          let cache = [];
-          const exports = JSON.stringify(module.publicModule.exports, (key, value) => {
+        return JSON.stringify(input, (key, value) => {
+          try {
             if (typeof value === 'object' && value !== null) {
               if (cache.includes(value)) return;
               cache.push(value);
             }
+
+            if (typeof value === "function" && value !== null) {
+              if (cache.includes(key)) return;
+              cache.push(key);
+              return "[Function]";
+            }
+
             return value;
-          });
-          cache = null;
+          } catch(err) {}
+        });
+      };
 
-
-
+      for (const m of Object.keys(modules)) {
+        try {
+          const module = modules[m];
           const dumpedModule = {
-            id: m,
-            exports: JSON.parse(exports)
+            id: m
           };
 
-          if (module.publicModule.exports.default) {
-            dumpedModule["name"] = module.publicModule.exports.default.name;
-            dumpedModule["protoype"] = Object.getOwnPropertyNames(module.publicModule.exports.default.prototype);
+          if (module.publicModule.exports) {
+            if (typeof module.publicModule.exports === "function") {
+              dumpedModule["exports"] = `[Function: ${module.publicModule.exports.name}]`;
+            } else {
+              dumpedModule["exports"] = JSON.parse(prettyStringify(module.publicModule.exports));
+            }
+          }
+
+          if (module.publicModule?.exports.default) {
+            if (typeof module.publicModule.exports.default === "function") {
+              dumpedModule["default"] = `[Function: ${module.publicModule.exports.default.name}]`;
+              dumpedModule["protoype"] = Object.getOwnPropertyNames(module.publicModule.exports.default.prototype);
+            } else {
+              dumpedModule["default"] = Object.keys(module.publicModule.exports.default);
+            }
           }
 
           sendMessage(JSON.stringify(dumpedModule, null, "\t"));
-        } catch(err) {}
+        } catch(err) {
+          console.log(`Couldn't dump module ${m}`);
+          console.log(err);
+        }
       }
 
       sendReply(channeld, "Modules has been dumped.");
