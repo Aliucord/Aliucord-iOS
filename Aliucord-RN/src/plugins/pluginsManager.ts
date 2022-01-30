@@ -15,8 +15,6 @@ const aliucordSection: Section = {
 export function injectPluginsManager() {
   const commandsModule = getModule(m => m.getBuiltInCommands, false);
 
-  
-
   const builtInSections = commandsModule.exports.BUILT_IN_SECTIONS;
   commandsModule.exports.BUILT_IN_SECTIONS = {
     ...builtInSections,
