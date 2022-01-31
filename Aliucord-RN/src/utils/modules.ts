@@ -12,16 +12,18 @@ function modulesBlacklist(i) {
 }
 
 export function getModule(filter: (module: any) => boolean, exports = true): any {
-  const id = Object.keys(modules).map(i => Number(i)).find(i => {
-   if (modulesBlacklist(i)) return;
+  const id = Object.keys(modules).find(id => {
+    const module = modules[id];
+    if (!module.isInitialized) __r(Number(id));
 
-    return __r(i) && filter(__r(i));
+    if (module.publicModule.exports === undefined) return;
+    return filter(module.publicModule.exports);
   });
 
-  if (id === undefined) return null;
+  if (id === undefined) return;
 
-  const module = modules[id].publicModule;
-  return exports ? module.exports : module;
+  const { publicModule } = modules[id];
+  return exports ? publicModule.exports : publicModule;
 }
 
 export function getModules(filter: (module: any) => boolean): number[] {
