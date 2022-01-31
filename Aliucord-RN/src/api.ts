@@ -12,9 +12,6 @@ import { getToken, setToken, hideToken, showToken, removeToken } from "./api/tok
 import { fetchCurrentUser, fetchProfile, getUser } from "./api/users";
 
 export function prepareApi() {
-  window["getAssetByName"] = getAssetByName;
-  window["getAssets"] = getAssets;
-
   window["aliucord"] = {
     "getModule": getModule,
     "getModules": getModules,
