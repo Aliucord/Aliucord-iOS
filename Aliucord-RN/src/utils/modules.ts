@@ -3,7 +3,7 @@ declare const modules: { [id: number]: any };
 
 function modulesBlacklist(i) {
   // Importing these changes the locale
-  if (i >= 940 && i <= 968) return true;
+  if (i >= 941 && i <= 969) return true;
 
   // Importing these crashses Discord
   if (i == 199 || i == 432 || i == 433 || i == 444 || i == 445 || i == 456) return true;
