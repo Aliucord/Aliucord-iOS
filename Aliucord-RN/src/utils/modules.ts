@@ -2,9 +2,6 @@ declare const __r: (moduleId: number) => any;
 declare const modules: { [id: number]: any };
 
 function modulesBlacklist(i) {
-  // Importing these changes the locale
-  if (i >= 941 && i <= 969) return true;
-
   // Importing these crashses Discord
   if (i == 199 || i == 432 || i == 433 || i == 444 || i == 445 || i == 456) return true;
 
@@ -13,6 +10,8 @@ function modulesBlacklist(i) {
 
 export function getModule(filter: (module: any) => boolean, exports = true): any {
   const id = Object.keys(modules).find(id => {
+    if (modulesBlacklist(id)) return;
+
     const module = modules[id];
     if (!module.isInitialized) __r(Number(id));
 
