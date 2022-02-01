@@ -109,7 +109,7 @@ function push([caller, mdl, func]): Patch {
 }
 
 function get(caller, mdl, func): Patch {
-  const patch = this.patches.find(p => p.mdl == mdl && p.func == func);
+  const patch = patches.find(p => p.mdl == mdl && p.func == func);
   if (patch) return patch;
 
   return push([caller, mdl, func]);
