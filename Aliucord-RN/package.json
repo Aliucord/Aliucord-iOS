@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "license": "OSL-3.0",
   "scripts": {
-    "build": "rollup -c --configPlugin esbuild"
+    "build": "rollup -c --configPlugin esbuild",
+    "watch": "rollup -c --watch"
   },
   "repository": {
     "type": "git",
