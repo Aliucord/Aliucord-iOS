@@ -27,7 +27,6 @@ function getModules(filter: (module: any) => boolean, first = false): number[] {
   };
 
   const ids = first ? [Object.keys(modules).find(find)] : Object.keys(modules).filter(find);
-
   return ids.filter(id => id !== undefined).map(id => Number(id));
 }
 
@@ -35,8 +34,17 @@ function getModuleByProps(...props: string[]) {
   return getModule(m => props.every(p => m[p]), true);
 }
 
+function getModuleByIndex(id: string) {
+  const module = modules[id];
+  if (module === undefined) return;
+  if (!module.isInitialized) __r(Number(id));
+
+  return module.publicModule;
+}
+
 export {
   getModule,
   getModules,
-  getModuleByProps
+  getModuleByProps,
+  getModuleByIndex
 };

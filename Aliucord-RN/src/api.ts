@@ -1,4 +1,4 @@
-import { getModule, getModules } from "./utils/modules";
+import { getModule, getModules, getModuleByProps, getModuleByIndex } from "./utils/modules";
 import { getAssetByName, getAssets } from "./utils/assets";
 import { createPatch, patchBefore, patchInstead, patchAfter } from "./utils/patcher";
 
@@ -16,6 +16,8 @@ export function prepareApi() {
   window["aliucord"] = {
     "getModule": getModule,
     "getModules": getModules,
+    "getModuleByProps": getModuleByProps,
+    "getModuleByIndex": getModuleByIndex,
     "getAssetByName": getAssetByName,
     "getAssets": getAssets,
 
