@@ -3,18 +3,9 @@ import { ApplicationCommandOptionType, ApplicationCommandInputType, ApplicationC
 import { registerCommands, section } from "../api/commands";
 import { sendReply } from "../api/clyde";
 
-import { getModule } from "../utils/modules";
 import { sendCommand } from "../utils/native";
 
 export function injectPluginsManager() {
-  const commandsModule = getModule(m => m.getBuiltInCommands, false);
-
-  /*const builtInSections = commandsModule.exports.BUILT_IN_SECTIONS;
-  commandsModule.exports.BUILT_IN_SECTIONS = {
-    ...builtInSections,
-    [aliucordSection.id]: aliucordSection
-  };*/
-
   const listPluginsCommand: Command = {
     id: "installed-plugins",
     applicationId: section.id,
