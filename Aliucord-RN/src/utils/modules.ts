@@ -2,14 +2,21 @@ declare const __r: (moduleId: number) => any;
 declare const modules: { [id: number]: any };
 
 function modulesBlacklist(i) {
-  // Importing these crashses Discord
   if (i == 199 || i == 432 || i == 433 || i == 444 || i == 445 || i == 456) return true;
 
   return false;
 }
 
-export function getModule(filter: (module: any) => boolean, exports = true): any {
-  const id = Object.keys(modules).find(id => {
+function getModule(filter: (module: any) => boolean, exports = true): any {
+  const ids = getModules(filter);
+  if (ids.length === 0 || ids[0] === undefined) return;
+
+  const { publicModule } = modules[ids[0]];
+  return exports ? publicModule.exports : publicModule;
+}
+
+function getModules(filter: (module: any) => boolean): number[] {
+  const ids = Object.keys(modules).filter(id => {
     if (modulesBlacklist(id)) return;
 
     const module = modules[id];
@@ -19,18 +26,15 @@ export function getModule(filter: (module: any) => boolean, exports = true): any
     return filter(module.publicModule.exports);
   });
 
-  if (id === undefined) return;
-
-  const { publicModule } = modules[id];
-  return exports ? publicModule.exports : publicModule;
+  return ids.map(id => Number(id));
 }
 
-export function getModules(filter: (module: any) => boolean): number[] {
-  const ids = Object.keys(modules).map(i => Number(i)).filter(i => {
-    if (modulesBlacklist(i)) return;
-
-    return __r(i) && filter(__r(i));
-  });
-
-  return ids;
+function getModuleByProps(...props: string[]) {
+  return getModule(m => props.every(p => m[p]), true);
 }
+
+export {
+  getModule,
+  getModules,
+  getModuleByProps
+};
