@@ -1,6 +1,6 @@
 import { getModule, getModules, getModuleByProps, getModuleByIndex } from "./utils/modules";
 import { getAssetByName, getAssets } from "./utils/assets";
-import { createPatch, patchBefore, patchInstead, patchAfter } from "./utils/patcher";
+import { create, before, instead, after } from "./utils/patcher";
 
 import { sendReply } from "./api/clyde";
 import { registerCommands, unregisterCommands } from "./api/commands";
@@ -22,10 +22,10 @@ export function prepareApi() {
     "getAssets": getAssets,
 
     "patcher": {
-      createPatch,
-      patchBefore,
-      patchInstead,
-      patchAfter
+      create,
+      before,
+      instead,
+      after
     },
 
     "clyde": {

@@ -138,31 +138,32 @@ function patch(caller: string, mdl: mdl, func: string, callback: Function, type 
   return patch.unpatch;
 }
 
-function createPatch(name: string) {
+function create(name: string) {
   return {
     getPatchesByCaller: getPatchesByCaller,
-    before: (...args) => patchBefore(name, ...args),
-    instead: (...args) => patchInstead(name, ...args),
-    after: (...args) => patchAfter(name, ...args),
-    unpatchAll: () => unpatchAll(name) 
+    before: (...args) => before(name, ...args),
+    instead: (...args) => instead(name, ...args),
+    after: (...args) => after(name, ...args),
+    unpatchAll: () => unpatchAll(name)
   };
 }
 
-function patchBefore(caller: string, mdl: mdl, func: string, callback: Function) {
+function before(caller: string, mdl: mdl, func: string, callback: Function) {
   patch(caller, mdl, func, callback, Type.before);
 }
 
-function patchInstead(caller: string, mdl: mdl, func: string, callback: Function) {
+function instead(caller: string, mdl: mdl, func: string, callback: Function) {
   patch(caller, mdl, func, callback, Type.instead);
 }
 
-function patchAfter(caller: string, mdl: mdl, func: string, callback: Function) {
+function after(caller: string, mdl: mdl, func: string, callback: Function) {
   patch(caller, mdl, func, callback, Type.after);
 }
 
 export {
-  createPatch,
-  patchBefore,
-  patchInstead,
-  patchAfter
+  create,
+  before,
+  instead,
+  after,
+  unpatchAll
 };
