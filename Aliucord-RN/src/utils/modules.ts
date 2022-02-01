@@ -8,15 +8,15 @@ function modulesBlacklist(i) {
 }
 
 function getModule(filter: (module: any) => boolean, exports = true): any {
-  const ids = getModules(filter);
-  if (ids.length === 0 || ids[0] === undefined) return;
+  const ids = getModules(filter, true);
+  if (ids.length === 0) return;
 
   const { publicModule } = modules[ids[0]];
   return exports ? publicModule.exports : publicModule;
 }
 
-function getModules(filter: (module: any) => boolean): number[] {
-  const ids = Object.keys(modules).filter(id => {
+function getModules(filter: (module: any) => boolean, first = false): number[] {
+  const find = (id) => {
     if (modulesBlacklist(id)) return;
 
     const module = modules[id];
@@ -24,9 +24,11 @@ function getModules(filter: (module: any) => boolean): number[] {
 
     if (module.publicModule.exports === undefined) return;
     return filter(module.publicModule.exports);
-  });
+  };
 
-  return ids.map(id => Number(id));
+  const ids = first ? [Object.keys(modules).find(find)] : Object.keys(modules).filter(find);
+
+  return ids.filter(id => id !== undefined).map(id => Number(id));
 }
 
 function getModuleByProps(...props: string[]) {
