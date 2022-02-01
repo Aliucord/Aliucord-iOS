@@ -55,7 +55,7 @@ export function injectCommands() {
     type: ApplicationCommandType.Chat,
     inputType: ApplicationCommandInputType.BuiltIn,
 
-    execute: function(args) {
+    execute: function (args) {
       reloadDiscord();
     }
   }, {
@@ -67,7 +67,7 @@ export function injectCommands() {
     type: ApplicationCommandType.Chat,
     inputType: ApplicationCommandInputType.BuiltIn,
 
-    execute: function(args, message) {
+    execute: function (args, message) {
       const token = getToken();
       const channeld = message.channel.id;
       sendReply(channeld, `\`${token}\``);
@@ -81,57 +81,43 @@ export function injectCommands() {
     type: ApplicationCommandType.Chat,
     inputType: ApplicationCommandInputType.BuiltIn,
 
-    execute: function(args, message) {
+    execute: function (args, message) {
       const channeld = message.channel.id;
       const modules = window["modules"];
 
-      const prettyStringify = (input) => {
-        let cache = [];
+      function parseValue(value) {
+        if (typeof value === "function") {
+          return value.toString();
+        } else if (Array.isArray(value)) {
+          return value.map(parseValue);
+        } else if (typeof value === "object") {
+          const output = {};
 
-        return JSON.stringify(input, (key, value) => {
-          try {
-            if (typeof value === 'object' && value !== null) {
-              if (cache.includes(value)) return;
-              cache.push(value);
-            }
+          for (const key in value) {
+            output[key] = parseValue(value[key]);
+          }
 
-            if (typeof value === "function" && value !== null) {
-              if (cache.includes(key)) return;
-              cache.push(key);
-              return "[Function]";
-            }
+          return output;
+        }
 
-            return value;
-          } catch(err) {}
-        });
-      };
+        return value;
+      }
 
       for (const m of Object.keys(modules)) {
         try {
           const module = modules[m];
-          const dumpedModule = {
-            id: m
-          };
+          const dumpedModule = { id: m };
 
-          if (module.publicModule.exports) {
-            if (typeof module.publicModule.exports === "function") {
-              dumpedModule["exports"] = `[Function: ${module.publicModule.exports.name}]`;
-            } else {
-              dumpedModule["exports"] = JSON.parse(prettyStringify(module.publicModule.exports));
-            }
-          }
+          if (!module.publicModule?.exports) continue;
 
-          if (module.publicModule?.exports.default) {
-            if (typeof module.publicModule.exports.default === "function") {
-              dumpedModule["default"] = `[Function: ${module.publicModule.exports.default.name}]`;
-              dumpedModule["prototype"] = Object.getOwnPropertyNames(module.publicModule.exports.default.prototype);
-            } else {
-              dumpedModule["default"] = Object.keys(module.publicModule.exports.default);
-            }
+          const exports = module.publicModule.exports;
+
+          for (const key of Object.keys(module.publicModule.exports)) {
+            dumpedModule[key] = parseValue(exports[key]);
           }
 
           sendMessage(JSON.stringify(dumpedModule, null, "\t"));
-        } catch(err) {
+        } catch (err) {
           console.log(`Couldn't dump module ${m}`);
           console.log(err);
         }

@@ -12,16 +12,15 @@ let commands = [];
 export const section = {
   id: "aliucord",
   type: 1,
-  name: "Aliucord",
-  icon: "__ALIUCORD__"
+  name: "Aliucord"
 };
 
 Patcher.after(Commands, "getBuiltInCommands", (_, args, res) => {
   return [...res, ...commands];
 });
 
-Patcher.after(Icons, "getIconURL", (_, [, props]) => {
-  if (props.icon === "__ALIUCORD__") {
+Patcher.after(Icons, "getIconURL", (_, args) => {
+  if (args?.[1]?.id === "aliucord") {
     return "https://cdn.discordapp.com/icons/811255666990907402/912861e37f0efa5c77729592ea8f7b8f.png?size=256";
   }
 });
@@ -41,7 +40,7 @@ Patcher.after(Discovery, "useApplicationCommandsDiscoveryState", (_, args, res) 
     });
 
     res.sectionsOffset.push(commands.length);
-   }
+  }
 
   const index = res.discoverySections.findIndex(e => e.key === "-2");
   if (res.discoverySections[index]?.data) {
