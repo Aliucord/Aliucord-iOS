@@ -3,7 +3,7 @@ import { getAssetByName, getAssets } from "./utils/assets";
 import { createPatch, patchBefore, patchInstead, patchAfter } from "./utils/patcher";
 
 import { sendReply } from "./api/clyde";
-import { registerCommands } from "./api/commands";
+import { registerCommands, unregisterCommands } from "./api/commands";
 import { showDialog } from "./api/dialog";
 import { reloadDiscord, getVersion, getBuild, getDevice, getSystemVersion } from "./api/native";
 import { get, post, put, patch, _delete, getAPIBaseURL } from "./api/rest";
@@ -33,7 +33,8 @@ export function prepareApi() {
     },
 
     "commands": {
-      registerCommands
+      registerCommands,
+      unregisterCommands
     },
 
     "dialog": {

@@ -142,5 +142,5 @@ export function injectCommands() {
     }
   }];
 
-  registerCommands(aliucordCommands);
+  registerCommands("aliucord", aliucordCommands);
 }

@@ -101,7 +101,7 @@ export function injectPluginsManager() {
     uninstallPluginCommand
   ];
 
-  registerCommands(aliucordCommands);
+  registerCommands("aliucord", aliucordCommands);
 }
 
 export {
