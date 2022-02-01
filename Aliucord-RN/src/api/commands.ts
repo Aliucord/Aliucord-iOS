@@ -1,7 +1,7 @@
 import { getModuleByProps } from "../utils/modules";
-import { createPatch } from '../utils/patcher';
+import { create } from '../utils/patcher';
 
-const Patcher = createPatch("aliucord-commands");
+const Patcher = create("aliucord-commands");
 
 const Commands = getModuleByProps("getBuiltInCommands");
 const Discovery = getModuleByProps("useApplicationCommandsDiscoveryState");
