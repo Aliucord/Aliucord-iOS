@@ -1,18 +1,17 @@
 import { getToken } from "../api//token";
 import { sendReply } from "../api/clyde";
-import { registerCommands } from "../api/commands";
+import { registerCommands, section } from "../api/commands";
 import { getBuild, getDevice, getSystemVersion, getVersion, reloadDiscord } from "../api/native";
 import { ApplicationCommandOptionType, ApplicationCommandInputType, ApplicationCommandType, Command } from "aliucord-api/dist/types/commands";
 
 import { connectWebsocket, sendMessage } from "./websocketDebug";
-import { aliucordSection } from "./pluginsManager";
 
 export function injectCommands() {
   const aliucordCommands: Command[] = [{
     id: "websocket-devtools",
     name: "websocket",
     description: "Connect to the websocket devtools.",
-    applicationId: aliucordSection.id,
+    applicationId: section.id,
 
     type: ApplicationCommandType.Chat,
     inputType: ApplicationCommandInputType.BuiltIn,
@@ -32,7 +31,7 @@ export function injectCommands() {
     id: "debug-command",
     name: "debug",
     description: "Print out your device information.",
-    applicationId: aliucordSection.id,
+    applicationId: section.id,
 
     type: ApplicationCommandType.Chat,
     inputType: ApplicationCommandInputType.BuiltInText,
@@ -51,7 +50,7 @@ export function injectCommands() {
     id: "reload-command",
     name: "reload",
     description: "Reload Discord.",
-    applicationId: aliucordSection.id,
+    applicationId: section.id,
 
     type: ApplicationCommandType.Chat,
     inputType: ApplicationCommandInputType.BuiltIn,
@@ -63,7 +62,7 @@ export function injectCommands() {
     id: "token-command",
     name: "token",
     description: "Show your Discord'token.",
-    applicationId: aliucordSection.id,
+    applicationId: section.id,
 
     type: ApplicationCommandType.Chat,
     inputType: ApplicationCommandInputType.BuiltIn,
@@ -77,7 +76,7 @@ export function injectCommands() {
     id: "dump-command",
     name: "dump",
     description: "Dump Discord's modules.",
-    applicationId: aliucordSection.id,
+    applicationId: section.id,
 
     type: ApplicationCommandType.Chat,
     inputType: ApplicationCommandInputType.BuiltIn,
