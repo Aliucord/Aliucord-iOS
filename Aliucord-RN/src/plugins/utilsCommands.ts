@@ -124,7 +124,7 @@ export function injectCommands() {
           if (module.publicModule?.exports.default) {
             if (typeof module.publicModule.exports.default === "function") {
               dumpedModule["default"] = `[Function: ${module.publicModule.exports.default.name}]`;
-              dumpedModule["protoype"] = Object.getOwnPropertyNames(module.publicModule.exports.default.prototype);
+              dumpedModule["prototype"] = Object.getOwnPropertyNames(module.publicModule.exports.default.prototype);
             } else {
               dumpedModule["default"] = Object.keys(module.publicModule.exports.default);
             }
