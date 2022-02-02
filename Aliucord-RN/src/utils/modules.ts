@@ -3,7 +3,7 @@ declare const modules: { [id: number]: any };
 
 function modulesBlacklist(i) {
   if (i == 199 || i == 432 || i == 433 || i == 444 || i == 445 || i == 456) return true;
-  if (i > 940 && i < 670) return true;
+  if (i > 940 && i < 970) return true;
 
   return false;
 }
