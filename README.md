@@ -1,11 +1,11 @@
 # Aliucord iOS
 
 This repo contains all the projects and files related to Aliucord iOS.  
-Currently tested build: **113.0 (30088)**.  
+Currently tested build: **113.0 (30215)**.  
 
 ## 1. Set up
 
-All the files required to use Alicuord iOS are provided in `files/` directory.  
+All the files required to use Aliucord iOS are provided in `files/` directory.  
 
 Source for `hermes` can be found [here](https://github.com/Aliucord/hermes/tree/aliucord-ios), built using `utils/build-ios-framework.sh`.  
 Source for `Aliucord.dylib` can be found [here](tweak), requires theos to be built.  
