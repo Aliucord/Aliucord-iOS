@@ -57,6 +57,7 @@ function override(patch: Patch) {
         if (Array.isArray(tempArgs)) args = tempArgs;
       } catch(error) {
         console.error(`Could not fire before patch for ${patch.func} of ${before.caller}`);
+        console.error(error);
       }
     }
 
@@ -69,6 +70,7 @@ function override(patch: Patch) {
         if (ret !== undefined) res = ret;
       } catch(error) {
         console.error(`Could not fire instead patch for ${patch.func} of ${instead.caller}`);
+        console.error(error);
       }
     }
 
@@ -78,6 +80,7 @@ function override(patch: Patch) {
         if (ret !== undefined) res = ret;
       } catch(error) {
         console.error(`Could not fire after patch for ${patch.func} of ${after.caller}`);
+        console.error(error);
       }
     }
 
