@@ -93,11 +93,18 @@ BOOL saveTheme(NSString *theme, NSString *json) {
                             error:nil];
 
   BOOL success = [chatThemeData writeToFile:THEME_PATH atomically:FALSE];
+
+  if (success) {
+    loadTheme();
+  }
+
   return success;
 }
 
 // Delete the theme
 BOOL deleteTheme() {
+  colors = [[NSMutableDictionary alloc] init];
+
   NSFileManager *fileManager = [NSFileManager defaultManager];
   NSError *err;
   [fileManager
