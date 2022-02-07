@@ -1,4 +1,4 @@
-import { getItem, setItem } from "../api/storage";
+import { getItem, removeItem, setItem } from "../api/storage";
 import { getModule, getModuleByProps } from "../utils/modules";
 import { sendCommand } from "./native";
 
@@ -61,6 +61,7 @@ function applyColours(theme) {
   };
 
   ThemeColorMap.default = colorMap;
+  Colors.default = colors;
   ColorsModule.Colors = colors;
 
   LocaleSettings.default.updateLocalSettings({
@@ -93,8 +94,12 @@ function registerTheme(theme) {
 /**
  * Remove the currently applied theme
  */
-function removeTheme() {
-
+async function removeTheme() {
+  themer().theme = "";
+  await removeItem("theme");
+  
+  const response = await sendCommand("remove-theme");
+  return response.data;
 }
 
 export {

@@ -1,7 +1,7 @@
 import { ApplicationCommandOptionType, ApplicationCommandInputType, ApplicationCommandType, Command } from "aliucord-api/dist/types/commands";
 
 import { section } from "../api/commands";
-import { applyTheme, getThemeByName, listThemes } from "../api/themes";
+import { applyTheme, getThemeByName, listThemes, removeTheme } from "../api/themes";
 import { sendReply } from "../api/clyde";
 
 const themes: Command = {
@@ -42,7 +42,7 @@ const apply: Command = {
     }
 
     applyTheme(name).then(response => {
-      sendReply(message.channel.id, "Theme has been applied. Use `/reload` to reload the app.");
+      sendReply(message.channel.id, response);
     });
   }
 }
@@ -56,7 +56,9 @@ const clear: Command = {
   inputType: ApplicationCommandInputType.BuiltIn,
 
   execute: (args, message) => {
-    console.log("sex");
+    removeTheme().then(response => {
+      sendReply(message.channel.id, response);
+    });
   }
 }
 
