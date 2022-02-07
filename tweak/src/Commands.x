@@ -165,6 +165,17 @@ void handleCommand(NSDictionary *command) {
     
     sendResponse(createResponse(uuid, @"Error applying theme."));
   }
+
+  if ([name isEqualToString:@"remove-theme"]) {
+    BOOL success = deleteTheme();
+
+    if (success) {
+      sendResponse(createResponse(uuid, @"Theme has been removed. Use `/reload` to reload Discord."));
+      return; 
+    }
+    
+    sendResponse(createResponse(uuid, @"Error removing theme."));
+  }
 }
 
 %hook AppDelegate

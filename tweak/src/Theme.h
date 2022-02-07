@@ -2,3 +2,4 @@
 
 void loadTheme();
 BOOL saveTheme(NSString *theme, NSString *json);
+BOOL deleteTheme();

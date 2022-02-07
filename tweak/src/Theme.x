@@ -96,6 +96,21 @@ BOOL saveTheme(NSString *theme, NSString *json) {
   return success;
 }
 
+// Delete the theme
+BOOL deleteTheme() {
+  NSFileManager *fileManager = [NSFileManager defaultManager];
+  NSError *err;
+  [fileManager
+    removeItemAtPath:THEME_PATH
+    error:&err];
+
+  if (err) {
+    return false;
+  }
+
+  return true;
+}
+
 // Get a color
 UIColor* getColor(NSString *name) {
   if (![colors objectForKey:name]) {
