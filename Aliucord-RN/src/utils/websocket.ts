@@ -4,7 +4,10 @@ declare const nativeLoggingHook: (message: string, level: number) => void;
 
 let socket: WebSocket;
 
-function setUpDebugWS() {
+/**
+ * Hook the log function to the websocket server and connect to it
+ */
+function prepareWebsocket() {
   connectWebsocket("localhost:9090");
 
   const _log = nativeLoggingHook;
@@ -14,6 +17,9 @@ function setUpDebugWS() {
   };
 }
 
+/**
+ * Connect to a websocket server
+ */
 function connectWebsocket(host: string) {
   console.log("Connecting to debug ws");
 
@@ -57,12 +63,15 @@ function connectWebsocket(host: string) {
   });
 }
 
+/**
+ * Send a message to the websocket server
+ */
 function sendMessage(message: string) {
   if (socket?.readyState === WebSocket.OPEN) socket.send(message);
 }
 
 export {
-  setUpDebugWS,
+  prepareWebsocket,
   connectWebsocket,
   sendMessage
 };

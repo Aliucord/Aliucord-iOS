@@ -1,13 +1,13 @@
 import { prepareApi } from "./api";
-import { setUpDebugWS } from "./plugins/websocketDebug";
-import { injectPluginsManager } from "./plugins/pluginsManager";
-import { injectCommands } from "./plugins/utilsCommands";
+import { prepareWebsocket } from "./utils/websocket";
+import { prepareThemer } from "./utils/themes";
+import { prepareCommands } from "./commands";
 
 try {
   prepareApi();
-  setUpDebugWS();
-  injectPluginsManager();
-  injectCommands();
+  prepareThemer();
+  prepareWebsocket();
+  prepareCommands();
 } catch (error) {
   console.error(error);
 }
