@@ -155,6 +155,16 @@ void handleCommand(NSDictionary *command) {
     });
   }
 
+  if ([name isEqualToString:@"apply-theme"]) {
+    BOOL success = saveTheme(params[0], params[1]);
+
+    if (success) {
+      sendResponse(createResponse(uuid, @"Theme has been applied."));
+      return; 
+    }
+    
+    sendResponse(createResponse(uuid, @"Error applying theme."));
+  }
 }
 
 %hook AppDelegate
