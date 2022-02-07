@@ -1,6 +1,7 @@
 #import "Commands.h"
 #import "Plugins.h"
 #import "Utils.h"
+#import "Theme.h"
 
 #define ALIUCORD_PATH [NSString stringWithFormat:@"%@/%@", NSHomeDirectory(), @"Documents/Aliucord.js"]
 
