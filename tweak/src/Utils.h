@@ -1,3 +1,4 @@
+BOOL checkForUpdate();
 BOOL downloadFile(NSString *source, NSString *dest);
 BOOL checkFileExists(NSString *path);
 

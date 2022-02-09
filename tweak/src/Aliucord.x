@@ -7,16 +7,18 @@
 - (id)sourceURLForBridge:(id)arg1 {
 	id original = %orig;
 
-	NSLog(@"Downloading Aliucord.js to %@", ALIUCORD_PATH);
-	BOOL success = downloadFile(ALIUCORD_URL, ALIUCORD_PATH);
-	
-	if (success) {
-		NSLog(@"Downloaded");
-	} else {
-		NSLog(@"Error downloading");
+	if (checkForUpdate()) {
+		NSLog(@"Downloading Aliucord.js to %@", ALIUCORD_PATH);
+		BOOL success = downloadFile(ALIUCORD_URL, ALIUCORD_PATH);
+		
+		if (success) {
+			NSLog(@"Downloaded");
+		} else {
+			NSLog(@"Error downloading");
 
-		if (!checkFileExists(ALIUCORD_PATH)) {
-			alert(@"Epic fail");
+			if (!checkFileExists(ALIUCORD_PATH)) {
+				alert(@"Epic fail");
+			}
 		}
 	}
 

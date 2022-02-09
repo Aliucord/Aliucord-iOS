@@ -1,5 +1,34 @@
 #import "Aliucord.h"
 
+// Check for update
+BOOL checkForUpdate() {
+  NSMutableURLRequest *aliucordFile = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:ALIUCORD_URL]];
+  NSHTTPURLResponse *response;
+  NSError *err;
+
+  [aliucordFile setValue:@"HEAD" forKey:@"HTTPMethod"];
+  [NSURLConnection sendSynchronousRequest:aliucordFile returningResponse:&response error:&err];
+
+  if (err) {
+    return false;
+  }
+
+  if ([response respondsToSelector:@selector(allHeaderFields)]) {
+    NSDictionary *headers = [response allHeaderFields];
+    NSString *lastModified = [headers valueForKey:@"Last-Modified"];
+
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSString *aliucordVersion = [userDefaults stringForKey:@"aliucord-version"];
+
+    if (!aliucordVersion || ![aliucordVersion isEqualToString:lastModified]) {
+      [userDefaults setObject:lastModified forKey:@"aliucord-version"];
+      return true;
+    }
+  }
+
+  return false;
+}
+
 // Download a file 
 BOOL downloadFile(NSString *source, NSString *dest) {
 	NSURL *url = [NSURL URLWithString:source];
