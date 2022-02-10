@@ -8,8 +8,6 @@ let socket: WebSocket;
  * Hook the log function to the websocket server and connect to it
  */
 function prepareWebsocket() {
-  connectWebsocket("localhost:9090");
-
   const _log = nativeLoggingHook;
   globalThis.nativeLoggingHook = (message: string, level: number) => {
     if (socket?.readyState === WebSocket.OPEN) socket.send(JSON.stringify({ level, message }));

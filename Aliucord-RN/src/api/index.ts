@@ -1,6 +1,7 @@
 import { getModule, getModules, getModuleByProps, getModuleByIndex } from "../utils/modules";
 import { getAssetByName, getAssets } from "../utils/assets";
 import { create, before, instead, after } from "../utils/patcher";
+import { connectWebsocket } from "../utils/websocket";
 
 import { sendReply } from "./clyde";
 import { registerCommands, unregisterCommands } from "./commands";
@@ -21,6 +22,10 @@ export function prepareApi() {
     "getModuleByIndex": getModuleByIndex,
     "getAssetByName": getAssetByName,
     "getAssets": getAssets,
+
+    "__ALIUCORD_INTERNAL_IF_YOU_USE_THIS_I_WILL_NUKE_YOU__": {
+      connectWebsocket
+    },
 
     "themer": {
       theme: "",
