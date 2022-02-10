@@ -31,6 +31,10 @@
 
 - (void)startWithLaunchOptions:(id)options {
 	%orig;
+	injectCode(self.window, [NSString stringWithFormat:@"aliucord.debug = %s", IS_DEBUG ? "true" : "false"]);
+	if (IS_DEBUG) {
+		injectCode(self.window, @"aliucord.__ALIUCORD_INTERNAL_IF_YOU_USE_THIS_I_WILL_NUKE_YOU__.connectWebsocket('localhost:9090')");
+	}
 }
 
 %end
