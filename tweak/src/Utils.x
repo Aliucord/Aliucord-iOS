@@ -92,3 +92,15 @@ void confirm(NSString *title, NSString *message, void (^confirmed)(void)) {
   UIViewController *viewController = [[[[UIApplication sharedApplication] delegate] window] rootViewController];
   [viewController presentViewController:alert animated:YES completion:nil];
 }
+
+// Inject code into Discord
+void injectCode(UIWindow *window, NSString *code) {
+  RCTRootView *rootView = (RCTRootView *)window.rootViewController.view;
+  RCTCxxBridge *bridge = rootView.bridge.batchedBridge;
+
+  NSData *sourceCodeData = [code dataUsingEncoding:NSUTF8StringEncoding];
+
+  [bridge _runAfterLoad:^{
+      [bridge executeSourceCode:sourceCodeData sync:NO];
+  }];
+}

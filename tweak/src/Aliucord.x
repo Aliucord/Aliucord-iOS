@@ -2,6 +2,10 @@
 #import "Utils.h"
 #import "Plugins.h"
 
+@interface AppDelegate
+    @property (nonatomic, strong) UIWindow *window;
+@end
+
 %hook AppDelegate
 
 - (id)sourceURLForBridge:(id)arg1 {
@@ -23,6 +27,10 @@
 	}
 
 	return original;
+}
+
+- (void)startWithLaunchOptions:(id)options {
+	%orig;
 }
 
 %end
