@@ -11,7 +11,7 @@
 #   define IS_DEBUG true
 #		define NSLog(fmt, ... ) NSLog((@"[Aliucord-iOS] " fmt), ##__VA_ARGS__);
 #else 
-#		define ALIUCORD_URL @"https://plugins.panties.moe/Aliucord.js"
+#		define ALIUCORD_URL @"https://ios.aliucord.com/files/Aliucord.js"
 #   define IS_DEBUG false
 #		define NSLog(...) (void)0
 #endif
