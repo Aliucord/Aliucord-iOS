@@ -1,6 +1,7 @@
 package patcher
 
 import (
+	"compress/flate"
 	"log"
 	"os"
 
@@ -38,7 +39,9 @@ func extractIcons(iconsPath *string) {
 func packDiscord() {
 	log.Println("packing discord")
 
-	format := archiver.Zip{}
+	format := archiver.Zip{
+		CompressionLevel: flate.BestCompression,
+	}
 	err := format.Archive([]string{"Payload"}, "Discord.zip")
 	if err != nil {
 		log.Fatalln(err)

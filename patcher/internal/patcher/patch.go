@@ -9,12 +9,27 @@ import (
 	"howett.net/plist"
 )
 
-func PatchDiscord(discordPath *string, hermesPath *string, iconsPath *string) {
+const (
+	DEFAULT_IPA_PATH      = "files/Discord.ipa"
+	DEFAULT_HERMES_PATH   = "files/hermes"
+	DEFAULT_ICONS_PATH    = "files/icons.zip"
+	DEFAULT_ALIUCORD_PATH = "files/Aliucord.dylib"
+)
+
+const (
+	IPA_URL      = "https://ios.aliucord.com/files/Discord.ipa"
+	HERMES_URL   = "https://ios.aliucord.com/files/hermes"
+	ALIUCORD_URL = "https://ios.aliucord.com/files/Aliucord.dylib"
+	ICONS_URL    = "https://ios.aliucord.com/files/icons.zip"
+)
+
+func PatchDiscord(discordPath *string, hermesPath *string, iconsPath *string, dylibPath *string) {
 	log.Println("starting patcher")
 
-	checkFile(discordPath)
-	checkFile(hermesPath)
-	checkFile(iconsPath)
+	checkFile(discordPath, DEFAULT_IPA_PATH, IPA_URL)
+	checkFile(hermesPath, DEFAULT_HERMES_PATH, HERMES_URL)
+	checkFile(iconsPath, DEFAULT_ICONS_PATH, ICONS_URL)
+	checkFile(dylibPath, DEFAULT_ALIUCORD_PATH, ALIUCORD_URL)
 
 	extractDiscord(discordPath)
 
@@ -56,10 +71,20 @@ func PatchDiscord(discordPath *string, hermesPath *string, iconsPath *string) {
 	log.Println("done!")
 }
 
-// Check if file exists
-func checkFile(path *string) {
-	if _, err := os.Stat(*path); errors.Is(err, os.ErrNotExist) {
-		log.Fatalln("Invalid path for ", *path)
+// Check if file exists, download if not found
+func checkFile(path *string, defaultPath string, url string) {
+	_, err := os.Stat(*path)
+	if errors.Is(err, os.ErrNotExist) {
+		if *path == defaultPath {
+			log.Println("downloading", url, "to", *path)
+			err := downloadFile(url, path)
+			if err != nil {
+				log.Println("error downloading", url)
+				log.Fatalln(err)
+			}
+		} else {
+			log.Fatalln("file not found", *path)
+		}
 	}
 }
 
