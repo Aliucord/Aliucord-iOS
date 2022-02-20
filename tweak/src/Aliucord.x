@@ -34,3 +34,64 @@
 }
 
 %end
+
+%hook RCTCxxBridge 
+
+- (void)executeApplicationScript:(NSData *)script url:(NSURL *)url async:(BOOL)async {
+	// Apply modules patch
+	NSString *modulesPatchCode = @"const oldObjectCreate = this.Object.create;"\
+																"const _window = this;"\
+																"_window.Object.create = (...args) => {"\
+																"    const obj = oldObjectCreate.apply(_window.Object, args);"\
+																"    if (args[0] === null) {"\
+																"        _window.modules = obj;"\
+																"        _window.Object.create = oldObjectCreate;"\
+																"    }"\
+																"    return obj;"\
+																"};";
+
+	NSData* modulesPatch = [modulesPatchCode dataUsingEncoding:NSUTF8StringEncoding];
+	NSLog(@"Injecting modules patch");
+	%orig(modulesPatch, [NSURL URLWithString:@"preload"], false);
+
+	// Load bundle
+	NSLog(@"Injecting bundle");
+	%orig(script, url, false);
+
+	// Inject Aliucord script
+	NSError* error = nil;
+	NSData* aliucord = [NSData dataWithContentsOfFile:ALIUCORD_PATH options:0 error:&error];
+	if (error) {
+		NSLog(@"Couldn't load Aliucord.js");
+		return;
+	}
+
+	NSString *aliucordCode = [[NSString alloc] initWithData:aliucord encoding:NSUTF8StringEncoding];
+	aliucordCode = wrapPlugin(aliucordCode, 9000, @"Aliucord.js");
+	
+	NSLog(@"Injecting Aliucord");
+	%orig([aliucordCode dataUsingEncoding:NSUTF8StringEncoding], [NSURL URLWithString:@"aliucord"], false);
+
+	// Load plugins
+	NSString* pluginsList = getPlugins();
+	NSArray *plugins = [pluginsList componentsSeparatedByString:@","];
+	int pluginID = 9001;
+	for (NSString *plugin in plugins) {
+		NSString *pluginPath = getPluginPath(plugin);
+
+		NSError* error = nil;
+		NSData* pluginData = [NSData dataWithContentsOfFile:pluginPath options:0 error:&error];
+		if (error) {
+			NSLog(@"Couldn't load %@", plugin);
+			continue;
+		}
+
+		NSString *pluginCode = [[NSString alloc] initWithData:pluginData encoding:NSUTF8StringEncoding];
+
+		NSLog(@"Injecting %@", plugin);
+		%orig([wrapPlugin(pluginCode, pluginID, [NSString stringWithFormat:@"%@.js", plugin]) dataUsingEncoding:NSUTF8StringEncoding], [NSURL URLWithString:plugin], false);
+		pluginID += 1;
+	}
+}
+
+%end

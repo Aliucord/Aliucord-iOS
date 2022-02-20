@@ -8,4 +8,4 @@ NSString* getPlugins();
 BOOL checkPlugin(NSString *name);
 BOOL installPlugin(NSURL *url);
 BOOL deletePlugin(NSString *name);
-void loadPlugin(NSString *name);
+NSString* wrapPlugin(NSString *code, int pluginID, NSString *name);

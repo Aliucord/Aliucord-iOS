@@ -102,11 +102,18 @@ BOOL deletePlugin(NSString *name) {
   return true;
 }
 
-// Load a plugin
-void loadPlugin(NSString *name) {
-  NSString *pluginPath = getPluginPath(name);
-  NSString *pluginCode = [NSString stringWithContentsOfFile:pluginPath encoding:NSUTF8StringEncoding error:nil];
+// Wrap a plugin
+NSString* wrapPlugin(NSString *code, int pluginID, NSString *name) {
+  NSString* plugin = [NSString stringWithFormat:@""\
+    "__d(function(...args) {"\
+      "try {"\
+        "%@"\
+      "} catch(err) {"\
+        "console.error('Fatal error with %@:', err);"\
+      "}"\
+    "}, %d, []);"\
+    "__r(%d);", code, name, pluginID, pluginID
+  ];
 
-  NSString *code = [NSString stringWithFormat:@"const modulesKeys = Object.keys(modules); const newModuleID = Number(modules[modulesKeys[modulesKeys.length - 1]].publicModule.id) + 1; __d(function(...args) {%@}, newModuleID, []); __r(newModuleID); delete newModuleID; delete modulesKeys", pluginCode];
-  injectCode(code);
+  return plugin;
 }
