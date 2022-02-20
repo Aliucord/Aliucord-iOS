@@ -74,8 +74,11 @@ BOOL checkPlugin(NSString *name) {
 
 // Install a plugin from an URL
 BOOL installPlugin(NSURL *url) {
-  NSString *dest = getPluginPath(getPluginName(url));
+  NSString *pluginName = getPluginName(url);
+  NSString *dest = getPluginPath(pluginName);
   BOOL success = downloadFile(url.absoluteString, dest);
+
+  //loadPlugin(pluginName);
   
   return success;
 }
@@ -97,4 +100,13 @@ BOOL deletePlugin(NSString *name) {
   }
 
   return true;
+}
+
+// Load a plugin
+void loadPlugin(NSString *name) {
+  NSString *pluginPath = getPluginPath(name);
+  NSString *pluginCode = [NSString stringWithContentsOfFile:pluginPath encoding:NSUTF8StringEncoding error:nil];
+
+  NSString *code = [NSString stringWithFormat:@"const modulesKeys = Object.keys(modules); const newModuleID = Number(modules[modulesKeys[modulesKeys.length - 1]].publicModule.id) + 1; __d(function(...args) {%@}, newModuleID, []); __r(newModuleID); delete newModuleID; delete modulesKeys", pluginCode];
+  injectCode(code);
 }

@@ -1,8 +1,8 @@
-Package: com.aliucord.ios
-Name: aliucord_ios
+Package: com.aliucord
+Name: Aliucord
 Version: 1.0.0
 Architecture: iphoneos-arm
-Description: An awesome MobileSubstrate tweak!
+Description: Patch Discord to add plugins and more!
 Maintainer: Zoey
 Author: Zoey
 Section: Tweaks

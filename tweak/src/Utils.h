@@ -9,4 +9,4 @@ BOOL checkFileExists(NSString *path);
 void alert(NSString *message);
 void confirm(NSString *title, NSString *message, void (^confirmed)(void));
 
-void injectCode(UIWindow *window, NSString *code);
+void injectCode(NSString *code);

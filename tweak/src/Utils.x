@@ -94,13 +94,12 @@ void confirm(NSString *title, NSString *message, void (^confirmed)(void)) {
 }
 
 // Inject code into Discord
-void injectCode(UIWindow *window, NSString *code) {
+void injectCode(NSString *code) {
+  UIWindow *window = [[[UIApplication sharedApplication] delegate] window];
   RCTRootView *rootView = (RCTRootView *)window.rootViewController.view;
   RCTCxxBridge *bridge = rootView.bridge.batchedBridge;
 
   NSData *sourceCodeData = [code dataUsingEncoding:NSUTF8StringEncoding];
 
-  [bridge _runAfterLoad:^{
-      [bridge executeSourceCode:sourceCodeData sync:NO];
-  }];
+  [bridge executeSourceCode:sourceCodeData sync:YES];
 }
