@@ -2,7 +2,6 @@ package patcher
 
 import (
 	"errors"
-	"io"
 	"log"
 	"os"
 
@@ -11,33 +10,24 @@ import (
 
 const (
 	DEFAULT_IPA_PATH      = "files/Discord.ipa"
-	DEFAULT_HERMES_PATH   = "files/hermes"
 	DEFAULT_ICONS_PATH    = "files/icons.zip"
 	DEFAULT_ALIUCORD_PATH = "files/Aliucord.dylib"
 )
 
 const (
 	IPA_URL      = "https://ios.aliucord.com/files/Discord.ipa"
-	HERMES_URL   = "https://ios.aliucord.com/files/hermes"
 	ALIUCORD_URL = "https://ios.aliucord.com/files/Aliucord.dylib"
 	ICONS_URL    = "https://ios.aliucord.com/files/icons.zip"
 )
 
-func PatchDiscord(discordPath *string, hermesPath *string, iconsPath *string, dylibPath *string) {
+func PatchDiscord(discordPath *string, iconsPath *string, dylibPath *string) {
 	log.Println("starting patcher")
 
 	checkFile(discordPath, DEFAULT_IPA_PATH, IPA_URL)
-	checkFile(hermesPath, DEFAULT_HERMES_PATH, HERMES_URL)
 	checkFile(iconsPath, DEFAULT_ICONS_PATH, ICONS_URL)
 	checkFile(dylibPath, DEFAULT_ALIUCORD_PATH, ALIUCORD_URL)
 
 	extractDiscord(discordPath)
-
-	log.Println("patching hermes")
-	if err := patchHermes(hermesPath); err != nil {
-		log.Fatalln(err)
-	}
-	log.Println("hermes patched")
 
 	log.Println("renaming Discord to Aliucord")
 	if err := patchName(); err != nil {
@@ -121,22 +111,6 @@ func savePlist(info *map[string]interface{}) error {
 
 	encoder := plist.NewEncoder(infoFile)
 	err = encoder.Encode(*info)
-	return err
-}
-
-// Patch Discord's hermes build
-func patchHermes(hermesPath *string) error {
-	patchedHermes, err := os.Open(*hermesPath)
-	if err != nil {
-		return err
-	}
-
-	outHermes, err := os.OpenFile("Payload/Discord.app/Frameworks/hermes.framework/hermes", os.O_RDWR, 0600)
-	if err != nil {
-		return err
-	}
-
-	_, err = io.Copy(outHermes, patchedHermes)
 	return err
 }
 
