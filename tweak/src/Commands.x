@@ -182,8 +182,8 @@ void handleCommand(NSDictionary *command) {
 
 - (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey, id> *)options {
 	%orig;
-
-	NSString *input = url.absoluteString;
+  
+  NSString *input = url.absoluteString;
 	if (!validateCommand(input)) {
     return true;
 	}

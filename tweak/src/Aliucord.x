@@ -38,6 +38,11 @@
 %hook RCTCxxBridge 
 
 - (void)executeApplicationScript:(NSData *)script url:(NSURL *)url async:(BOOL)async {
+	if ([[url absoluteString] isEqualToString:@"tweak"]) {
+		%orig;
+		return;
+	}
+
 	// Apply modules patch
 	NSString *modulesPatchCode = @"const oldObjectCreate = this.Object.create;"\
 																"const _window = this;"\
@@ -57,6 +62,9 @@
 	// Load bundle
 	NSLog(@"Injecting bundle");
 	%orig(script, url, false);
+
+	// Debug code
+	%orig([[NSString stringWithFormat:@"window.aliucord_debug = %s", IS_DEBUG ? "true" : "false"] dataUsingEncoding:NSUTF8StringEncoding], [NSURL URLWithString:@"preload"], false);
 
 	// Inject Aliucord script
 	NSError* error = nil;

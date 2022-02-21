@@ -101,5 +101,5 @@ void injectCode(NSString *code) {
 
   NSData *sourceCodeData = [code dataUsingEncoding:NSUTF8StringEncoding];
 
-  [bridge executeSourceCode:sourceCodeData sync:YES];
+  [bridge executeApplicationScript:sourceCodeData url:[NSURL URLWithString:@"tweak"] async:false];
 }

@@ -1,4 +1,4 @@
-#define ALIUCORD_PROTOCOL @"aliucord://"
+#define ALIUCORD_PROTOCOL @"com.hammerandchisel.discord://"
 
 NSDictionary* createResponse(NSString *command, NSString *data);
 void sendResponse(NSDictionary *response);
