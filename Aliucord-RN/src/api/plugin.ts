@@ -18,8 +18,6 @@ function registerPlugin(plugin: AliucordPlugin) {
   }
 
   plugin.onDisable = () => {
-    plugin.onStop();
-
     if (plugin.patches) {
       for (const patch of plugin.patches) {
         patch.unpatchAll();
@@ -30,6 +28,7 @@ function registerPlugin(plugin: AliucordPlugin) {
       unregisterCommands(plugin.name);
     }
 
+    plugin.onStop();
     console.log(plugin.name, " has been disabled.");
   };
 
