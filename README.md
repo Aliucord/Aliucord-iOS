@@ -5,7 +5,7 @@ Currently tested build: **116.0 (30456)**.
 
 ## Jailbroken users
 
-We have a repo available [here](https://ios.aliucord.com/repo).  
+We have a repo available [here](https://ios.aliucord.com/repo/).  
 You'll find Aliucord available as a tweak there.  
 
 ## Stock users
