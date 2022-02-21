@@ -152,15 +152,15 @@ function create(name: string) {
 }
 
 function before(caller: string, mdl: mdl, func: string, callback: Function) {
-  patch(caller, mdl, func, callback, Type.before);
+  return patch(caller, mdl, func, callback, Type.before);
 }
 
 function instead(caller: string, mdl: mdl, func: string, callback: Function) {
-  patch(caller, mdl, func, callback, Type.instead);
+  return patch(caller, mdl, func, callback, Type.instead);
 }
 
 function after(caller: string, mdl: mdl, func: string, callback: Function) {
-  patch(caller, mdl, func, callback, Type.after);
+  return patch(caller, mdl, func, callback, Type.after);
 }
 
 export {

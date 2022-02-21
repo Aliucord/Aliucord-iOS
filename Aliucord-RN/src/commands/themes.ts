@@ -1,4 +1,4 @@
-import { ApplicationCommandOptionType, ApplicationCommandInputType, ApplicationCommandType, Command } from "aliucord-api/dist/types/commands";
+import { ApplicationCommandOptionType, ApplicationCommandInputType, ApplicationCommandType, Command } from "aliucord-api/commands";
 
 import { section } from "../api/commands";
 import { applyTheme, getThemeByName, listThemes, removeTheme } from "../api/themes";

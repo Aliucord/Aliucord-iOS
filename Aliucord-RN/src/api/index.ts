@@ -9,6 +9,7 @@ import { showDialog } from "./dialog";
 import { reloadDiscord, getVersion, getBuild, getDevice, getSystemVersion } from "./native";
 import { get, post, put, patch, _delete, getAPIBaseURL } from "./rest";
 import { getItem, setItem, removeItem } from "./storage";
+import { registerPlugin, getPlugin, getPlugins, disablePlugin, enablePlugin } from "./plugin";
 import { getTheme, getThemeByName, listThemes, applyTheme, registerTheme, removeTheme } from "./themes";
 import { showToast } from "./toast";
 import { getToken, setToken, hideToken, showToken, removeToken } from "./token";
@@ -43,6 +44,18 @@ export function prepareApi() {
       before,
       instead,
       after
+    },
+
+    "plugins": {
+      enabled: [],
+      disabled: [],
+      
+      registerPlugin,
+      getPlugin,
+      getPlugins,
+
+      disablePlugin,
+      enablePlugin
     },
 
     "clyde": {

@@ -1,4 +1,4 @@
-import { ApplicationCommandOptionType, ApplicationCommandInputType, ApplicationCommandType, Command } from "aliucord-api/dist/types/commands";
+import { ApplicationCommandOptionType, ApplicationCommandInputType, ApplicationCommandType, Command } from "aliucord-api/commands";
 import { sendReply } from "../api/clyde";
 import { section } from "../api/commands";
 import { connectWebsocket, sendMessage } from "../utils/websocket";

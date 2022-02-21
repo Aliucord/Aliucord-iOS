@@ -2,7 +2,7 @@ import { getToken } from "../api//token";
 import { sendReply } from "../api/clyde";
 import { section } from "../api/commands";
 import { getBuild, getDevice, getSystemVersion, getVersion, reloadDiscord } from "../api/native";
-import { ApplicationCommandInputType, ApplicationCommandType, Command } from "aliucord-api/dist/types/commands";
+import { ApplicationCommandInputType, ApplicationCommandType, Command } from "aliucord-api/commands";
 
 /**
  * Print out debug information
