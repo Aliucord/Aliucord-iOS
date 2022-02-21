@@ -2,12 +2,21 @@
 
 // Get the path of a plugin via it's name
 NSString* getPluginPath(NSString *name) {
-  return [NSString stringWithFormat:@"%@/%@.js", PLUGINS_PATH, name];
+  NSString* plugins = getPlugins();
+
+  for (NSString *plugin in [plugins componentsSeparatedByString:@","]) {
+    if ([plugin containsString:name]) {
+      return [NSString stringWithFormat:@"%@/%@", PLUGINS_PATH, plugin];
+    }
+  }
+
+  return @"";
 }
 
 // Get the name of a plugin via it's url
 NSString* getPluginName(NSURL *url) {
-  return [[url lastPathComponent] stringByReplacingOccurrencesOfString:@".js" withString:@""];
+  NSString *stripped = [[url lastPathComponent] stringByReplacingOccurrencesOfString:@".disable" withString:@""];
+  return [stripped stringByReplacingOccurrencesOfString:@".js" withString:@""];
 }
 
 // Create the plugins folder
@@ -51,10 +60,7 @@ NSString* getPlugins() {
       continue;
     }
 
-    NSString *pluginName = [plugin
-                              stringByReplacingOccurrencesOfString:@".js"
-                              withString:@""];
-    [plugins addObject:pluginName];
+    [plugins addObject:plugin];
   }
 
   return [plugins componentsJoinedByString:@","];
@@ -77,8 +83,6 @@ BOOL installPlugin(NSURL *url) {
   NSString *pluginName = getPluginName(url);
   NSString *dest = getPluginPath(pluginName);
   BOOL success = downloadFile(url.absoluteString, dest);
-
-  //loadPlugin(pluginName);
   
   return success;
 }
@@ -100,6 +104,52 @@ BOOL deletePlugin(NSString *name) {
   }
 
   return true;
+}
+
+BOOL disablePlugin(NSString *name) {
+  NSString *path = getPluginPath(name);
+
+  if (!isEnabled(path)) {
+    return false;
+  }
+
+  NSFileManager *fileManager = [NSFileManager defaultManager];
+  NSError *err;
+  [fileManager
+    moveItemAtPath:path
+    toPath:[NSString stringWithFormat:@"%@/%@", PLUGINS_PATH, [NSString stringWithFormat:@"%@.js.disable", name]]
+    error:&err];
+
+  if (err) {
+    return false;
+  }
+
+  return true;
+}
+
+BOOL enablePlugin(NSString *name) {
+  NSString *path = getPluginPath(name);
+  
+  if (isEnabled(path)) {
+    return false;
+  }
+
+  NSFileManager *fileManager = [NSFileManager defaultManager];
+  NSError *err;
+  [fileManager
+    moveItemAtPath:path
+    toPath:[NSString stringWithFormat:@"%@/%@", PLUGINS_PATH, [NSString stringWithFormat:@"%@.js", name]]
+    error:&err];
+
+  if (err) {
+    return false;
+  }
+
+  return true;
+}
+
+BOOL isEnabled(NSString *name) {
+ return ![name containsString:@".disable"];
 }
 
 // Wrap a plugin

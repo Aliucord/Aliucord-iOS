@@ -181,6 +181,16 @@ void handleCommand(NSDictionary *command) {
     
     sendResponse(createResponse(uuid, @"Error removing theme."));
   }
+
+  if ([name isEqualToString:@"enable-plugin"]) {
+    BOOL success = enablePlugin(params[0]);
+    sendResponse(createResponse(uuid, success ? @"yes" : @"no"));
+  }
+
+  if ([name isEqualToString:@"disable-plugin"]) {
+    BOOL success = disablePlugin(params[0]);
+    sendResponse(createResponse(uuid, success ? @"yes" : @"no"));
+  }
 }
 
 %hook AppDelegate

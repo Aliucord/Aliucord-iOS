@@ -66,6 +66,7 @@
 
 	// Debug code
 	%orig([[NSString stringWithFormat:@"window.aliucord_debug = %s", IS_DEBUG ? "true" : "false"] dataUsingEncoding:NSUTF8StringEncoding], [NSURL URLWithString:@"preload"], false);
+	%orig([@"window.plugins = {}; window.plugins.enabled = []; window.plugins.disabled = [];" dataUsingEncoding:NSUTF8StringEncoding], [NSURL URLWithString:@"plugins"], false);
 
 	// Inject Aliucord script
 	NSError* error = nil;
@@ -87,6 +88,8 @@
 	int pluginID = 9001;
 	for (NSString *plugin in plugins) {
 		NSString *pluginPath = getPluginPath(plugin);
+		
+		%orig([[NSString stringWithFormat:@"window.plugins.%s.push('%@')", isEnabled(pluginPath) ? "enabled" : "disabled", getPluginName([NSURL URLWithString:plugin])] dataUsingEncoding:NSUTF8StringEncoding], [NSURL URLWithString:@"plugins"], false);
 
 		NSError* error = nil;
 		NSData* pluginData = [NSData dataWithContentsOfFile:pluginPath options:0 error:&error];
@@ -98,7 +101,7 @@
 		NSString *pluginCode = [[NSString alloc] initWithData:pluginData encoding:NSUTF8StringEncoding];
 
 		NSLog(@"Injecting %@", plugin);
-		%orig([wrapPlugin(pluginCode, pluginID, [NSString stringWithFormat:@"%@.js", plugin]) dataUsingEncoding:NSUTF8StringEncoding], [NSURL URLWithString:plugin], false);
+		%orig([wrapPlugin(pluginCode, pluginID, plugin) dataUsingEncoding:NSUTF8StringEncoding], [NSURL URLWithString:plugin], false);
 		pluginID += 1;
 	}
 }
