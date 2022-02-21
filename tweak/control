@@ -1,6 +1,6 @@
 Package: com.aliucord
 Name: Aliucord
-Version: 1.0.0
+Version: 1.0.1
 Architecture: iphoneos-arm
 Description: Patch Discord to add plugins and more!
 Maintainer: Zoey
