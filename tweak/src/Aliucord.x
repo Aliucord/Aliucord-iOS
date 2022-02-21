@@ -19,10 +19,6 @@
 			NSLog(@"Downloaded");
 		} else {
 			NSLog(@"Error downloading");
-
-			if (!checkFileExists(ALIUCORD_PATH)) {
-				alert(@"Epic fail");
-			}
 		}
 	}
 
@@ -62,6 +58,11 @@
 	// Load bundle
 	NSLog(@"Injecting bundle");
 	%orig(script, url, false);
+
+	if (!checkFileExists(ALIUCORD_PATH)) {
+		alert(@"Aliucord.js couldn't be found, please try restarting Discord.");
+		return;
+	}
 
 	// Debug code
 	%orig([[NSString stringWithFormat:@"window.aliucord_debug = %s", IS_DEBUG ? "true" : "false"] dataUsingEncoding:NSUTF8StringEncoding], [NSURL URLWithString:@"preload"], false);
