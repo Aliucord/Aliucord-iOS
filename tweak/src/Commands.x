@@ -33,7 +33,7 @@ void sendResponse(NSDictionary *response) {
 
 // Validate that a command is using the aliucord scheme
 BOOL validateCommand(NSString *command) {
-  BOOL valid = [command containsString:ALIUCORD_PROTOCOL];
+  BOOL valid = [command containsString:@"aliucord"];
 
   if (!valid) {
     NSLog(@"Invalid protocol");
@@ -56,21 +56,26 @@ NSString* cleanCommand(NSString *command) {
 
 // Parse the command
 NSDictionary* parseCommand(NSString *json) {
-  NSError *err;
-  id command = [NSJSONSerialization
-                JSONObjectWithData: [json dataUsingEncoding:NSUTF8StringEncoding]
-                options:0
-                error:&err];
+  NSURLComponents* components = [[NSURLComponents alloc] initWithString:json];
+  NSArray *queryItems = components.queryItems;
 
-  if (err) {
-    return nil;
+  NSMutableDictionary *command = [[NSMutableDictionary alloc] init];
+
+  for (NSURLQueryItem *item in queryItems) {
+    if ([item.name isEqualToString:@"id"]) {
+      command[@"id"] = item.value;
+    }
+
+    if ([item.name isEqualToString:@"command"]) {
+      command[@"command"] = item.value;
+    }
+
+    if ([item.name isEqualToString:@"params"]) {
+      command[@"params"] = [item.value componentsSeparatedByString:@","];
+    }
   }
 
-  if ([command isKindOfClass:[NSDictionary class]]) {
-    return command;
-  }
-
-  return nil;
+  return [command copy];
 }
 
 // Handle the command
@@ -180,11 +185,10 @@ void handleCommand(NSDictionary *command) {
 
 %hook AppDelegate
 
-- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey, id> *)options {
-	%orig;
-  
+- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey, id> *)options {  
   NSString *input = url.absoluteString;
 	if (!validateCommand(input)) {
+    %orig;
     return true;
 	}
 
