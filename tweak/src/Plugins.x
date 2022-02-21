@@ -82,6 +82,14 @@ BOOL checkPlugin(NSString *name) {
 BOOL installPlugin(NSURL *url) {
   NSString *pluginName = getPluginName(url);
   NSString *dest = getPluginPath(pluginName);
+
+  if ([dest isEqualToString:@""]) {
+    dest = [NSString stringWithFormat:@"%@/%@.js", PLUGINS_PATH, pluginName];
+  }
+  
+  NSLog(@"pluginName %@", pluginName);
+  NSLog(@"dest %@", dest);
+
   BOOL success = downloadFile(url.absoluteString, dest);
   
   return success;
