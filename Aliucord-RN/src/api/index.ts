@@ -24,7 +24,7 @@ export function prepareApi() {
     "getAssets": getAssets,
 
     "__ALIUCORD_INTERNAL_IF_YOU_USE_THIS_I_WILL_NUKE_YOU__": {
-      connectWebsocket
+      connectWebsocket,
     },
 
     "themer": {

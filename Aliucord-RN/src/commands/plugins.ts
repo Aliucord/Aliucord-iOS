@@ -19,11 +19,11 @@ const list: Command = {
   inputType: ApplicationCommandInputType.BuiltIn,
 
   execute: (args, message) => {
-    const channel = message.channel;
+    const channel = message.channel.id;
 
-    sendCommand("list-plugins").then((response) => {
-      const pluginsList = response.data;
-      sendReply(channel.id, pluginsList == "" ? "No plugins installed." : `**Plugins installed (${pluginsList.split(",").length})**: ${pluginsList.split(",").join(", ")}`);
+    sendCommand("list-plugins", [], (pluginsList) => {
+      const plugins = pluginsList == "" ? "No plugins installed." : `**Plugins installed (${pluginsList.split(",").length})**: ${pluginsList.split(",").join(", ")}`;
+      sendReply(channel, plugins);
     });
   },
 };
@@ -50,10 +50,10 @@ const install: Command = {
 
   execute: (args, message) => {
     const url = args[0].value;
-    const channel = message.channel;
+    const channel = message.channel.id;
 
-    sendCommand("install-plugin", [url]).then((response) => {
-      sendReply(channel.id, response.data);
+    sendCommand("install-plugin", [url], (data) => {
+      sendReply(channel, data);
     });
   }
 };
@@ -80,10 +80,10 @@ const uninstall: Command = {
 
   execute: (args, message) => {
     const name = args[0].value;
-    const channel = message.channel;
+    const channel = message.channel.id;
 
-    sendCommand("uninstall-plugin", [name]).then((response) => {
-      sendReply(channel.id, response.data);
+    sendCommand("uninstall-plugin", [name], (data) => {
+      sendReply(channel, data);
     });
   }
 };

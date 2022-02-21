@@ -9,51 +9,56 @@ interface Command {
   params: string[];
 }
 
+interface URL {
+  url: string;
+}
+
 interface Response {
   id: string;
   data: string;
 }
 
-interface URL {
-  url: string;
-}
+linkingModule.addEventListener("url", (url: URL) => {
+  let responseUrl = url.url;
+  responseUrl = decodeURIComponent(responseUrl.replace("com.hammerandchisel.discord://", ""));
+
+  try {
+    const response: Response = JSON.parse(responseUrl);
+    if (response.data === undefined) return;
+
+    console.log(response);
+
+    if (replies[response.id]) {
+      replies[response.id](response.data);
+      delete replies[response.id];
+    }
+  } catch (e) {
+    return;
+  }
+});
+
+const replies = {};
 
 /**
  * Send a command to the native handler of Aliucord
  * @param name
  * @param params
  */
-async function sendCommand(name: string, params: string[] = []): Promise<Response> {
-  return new Promise((resolve, reject) => {
-    const id = uuidv4();
-    const command: Command = {
-      command: name,
-      id,
-      params
-    };
+function sendCommand(name: string, params: string[] = [], reply?: (data) => void): void {
+  const id = uuidv4();
+  const command: Command = {
+    command: name,
+    id,
+    params
+  };
 
-    linkingModule.openURL(`aliucord://${JSON.stringify(command)}`).then(() => {
-      const subscription = linkingModule.addEventListener("url", (url: URL) => {
-        let responseUrl = url.url;
-        if (!responseUrl.includes("aliucord://")) return;
-
-        responseUrl = decodeURIComponent(responseUrl.replace("aliucord://", ""));
-
-        try {
-          const response: Response = JSON.parse(responseUrl);
-          if (response.id !== id) return;
-          if (response.data === undefined) return;
-
-          subscription.remove();
-          resolve(response);
-        } catch (e) {
-          return;
-        }
-      });
-    });
+  linkingModule.openURL(`com.hammerandchisel.discord://${JSON.stringify(command)}`).then(() => {
+    if (reply) {
+      replies[id] = reply;
+    }
   });
 }
 
 export {
-  sendCommand
+  sendCommand,
 };
