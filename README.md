@@ -3,28 +3,36 @@
 This repo contains all the projects and files related to Aliucord iOS.  
 Currently tested build: **116.0 (30456)**.  
 
+## Jailbroken users
+
+We have a repo available [here](https://ios.aliucord.com/repo).  
+You'll find Aliucord available as a tweak there.  
+
+## Stock users
+
+Aliucord is also available for stock users with a few extra steps as seen below.  
+
 ## 1. Set up
 
-All the files required to use Aliucord iOS are provided in `files/` directory.  
+The files required for Aliucord iOS will be downloaded over the network by the patcher script.  
+The files fetched are described below.  
 
-Source for `hermes` can be found [here](https://github.com/Aliucord/hermes/tree/aliucord-ios), built using `utils/build-ios-framework.sh`.  
-Source for `Aliucord.dylib` can be found [here](tweak), requires theos to be built.  
-
+`Aliucord.dylib` is the main tweak that will be injected, the source can be found [here](tweak), requires theos to be built.  
 `Discord.ipa` comes from the App Store, although it is decrypted using bfdecrypt so we can change files and sideload without any issues.  
 `icons.zip` is just a bunch of icons that will be injected into the Discord app.  
 
 ## 2. Preparing the IPA  
 
-To patch the Discord IPA, you can use the script provided by `patcher/`, pre-compilled binaries can be found in the `build/` folder.  
+To patch the Discord ipa, you can use the script provided by `patcher/`, pre-compilled binaries can be found in the `build/` folder.  
 
 ```shell
-./build/patcher_<os> -d ../files/Discord.ipa -i ../files/icons.zip -h ../files/hermes
+./build/patcher_<os>
 ```
 
 or you can run it from sources (with Go installed):
 
 ```shell
-go run cmds/patcher/main.go -d ../files/Discord.ipa -i ../files/icons.zip -h ../files/hermes
+go run cmds/patcher/main.go
 ```
 
 If everything goes well, it should output a file named `Aliucord.ipa` ready to be installed on your device!
@@ -61,4 +69,5 @@ With that enabled, you'll see everything outputted by the Javascript context in 
 
 ## Notice
 
-I always test with the latest testflight build available so I can always offer the most up-to-date experience, I'd recommend checking this repo daily to see if a new build has come out.  The Aliucord loader file will be updated when a new build is published and might be incompatible with your current installed version of Discord.
+I always test with the latest testflight build available so I can always offer the most up-to-date experience, I'd recommend checking this repo daily to see if a new build has come out.  
+The Aliucord loader file will be updated when a new build is published and might be incompatible with your current installed version of Discord.
