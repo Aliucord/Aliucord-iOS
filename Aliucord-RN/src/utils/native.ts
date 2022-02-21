@@ -46,13 +46,8 @@ const replies = {};
  */
 function sendCommand(name: string, params: string[] = [], reply?: (data) => void): void {
   const id = uuidv4();
-  const command: Command = {
-    command: name,
-    id,
-    params
-  };
 
-  linkingModule.openURL(`com.hammerandchisel.discord://${JSON.stringify(command)}`).then(() => {
+  linkingModule.openURL(`com.hammerandchisel.discord://aliucord?id=${id}&command=${name}&params=${params.join(',')}`).then(() => {
     if (reply) {
       replies[id] = reply;
     }
