@@ -7,3 +7,5 @@ Maintainer: Zoey
 Author: Zoey
 Section: Tweaks
 Depends: mobilesubstrate (>= 0.9.5000)
+SileoDepiction: https://ios.aliucord.com/repo/depictions/aliucord.json
+Icon: https://ios.aliucord.com/repo/icons/Aliucord.png
