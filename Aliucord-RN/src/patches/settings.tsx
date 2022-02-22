@@ -37,7 +37,7 @@ function patchSettings() {
           <FormDivider />
           <FormRow label="Plugins" trailing={<FormArrow/>} onPress={() => {
             showDialog({
-              title: "Comming soon",
+              title: "Coming soon",
               confirmText: "Okay",
               onConfirm() {},
             });
@@ -45,7 +45,7 @@ function patchSettings() {
           <FormDivider />
           <FormRow label="Themes" trailing={<FormArrow/>} onPress={() => {
             showDialog({
-              title: "Comming soon",
+              title: "Coming soon",
               confirmText: "Okay",
               onConfirm() {},
             });
