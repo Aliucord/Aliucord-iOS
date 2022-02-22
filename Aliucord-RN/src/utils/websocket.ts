@@ -13,6 +13,10 @@ function prepareWebsocket() {
     if (socket?.readyState === WebSocket.OPEN) socket.send(JSON.stringify({ level, message }));
     return _log(message, level);
   };
+
+  if (window["aliucord_debug"] === true) {
+    connectWebsocket("localhost:9090");
+  }
 }
 
 /**
