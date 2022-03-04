@@ -24,11 +24,7 @@ export function prepareApi() {
     "getAssets": getAssets,
     "version": "ALIUCORD_VERSION_DO_NOT_CHANGE_THIS_STRING_OR_I_WILL_DESTROY_YOU",
 
-    "__ALIUCORD_INTERNAL_IF_YOU_USE_THIS_I_WILL_NUKE_YOU__": {
-      get () {
-        console.log("User is not in the sudoers file. This incident will be reported");
-      }
-    },
+    "__ALIUCORD_INTERNAL_IF_YOU_USE_THIS_I_WILL_NUKE_YOU__": "User is not in the sudoers file. This incident will be reported",
 
     "themer": {
       getTheme,
