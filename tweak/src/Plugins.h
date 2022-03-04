@@ -4,7 +4,7 @@ NSString* getPluginPath(NSString *name);
 NSString* getPluginName(NSURL *url);
 
 BOOL createPluginsFolder();
-NSString* getPlugins();
+NSArray* getPlugins();
 
 BOOL checkPlugin(NSString *name);
 BOOL installPlugin(NSURL *url);
