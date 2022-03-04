@@ -1,7 +1,6 @@
 import { getModule, getModules, getModuleByProps, getModuleByIndex } from "../utils/modules";
 import { getAssetByName, getAssets } from "../utils/assets";
 import { create, before, instead, after } from "../utils/patcher";
-import { connectWebsocket } from "../utils/websocket";
 
 import { sendReply } from "./clyde";
 import { registerCommands, unregisterCommands } from "./commands";
@@ -9,8 +8,8 @@ import { showDialog } from "./dialog";
 import { reloadDiscord, getVersion, getBuild, getDevice, getSystemVersion } from "./native";
 import { get, post, put, patch, _delete, getAPIBaseURL } from "./rest";
 import { getItem, setItem, removeItem } from "./storage";
-import { registerPlugin, getPlugin, getPlugins, disablePlugin, enablePlugin } from "./plugin";
-import { getTheme, getThemeByName, listThemes, applyTheme, registerTheme, removeTheme } from "./themes";
+import { registerPlugin, getPlugin, getPlugins, getEnabledPlugins, getDisabledPlugins, disablePlugin, enablePlugin } from "./plugins";
+import { getTheme, getThemeByName, listThemes, applyTheme, removeTheme } from "./themes";
 import { showToast } from "./toast";
 import { getToken, setToken, hideToken, showToken, removeToken } from "./token";
 import { fetchCurrentUser, fetchProfile, getUser } from "./users";
@@ -26,17 +25,16 @@ export function prepareApi() {
     "version": "ALIUCORD_VERSION_DO_NOT_CHANGE_THIS_STRING_OR_I_WILL_DESTROY_YOU",
 
     "__ALIUCORD_INTERNAL_IF_YOU_USE_THIS_I_WILL_NUKE_YOU__": {
-      connectWebsocket,
+      get () {
+        console.log("User is not in the sudoers file. This incident will be reported");
+      }
     },
 
     "themer": {
-      theme: "",
-      themes: [],
       getTheme,
       getThemeByName,
       listThemes,
       applyTheme,
-      registerTheme,
       removeTheme,
     },
 
@@ -54,6 +52,8 @@ export function prepareApi() {
       registerPlugin,
       getPlugin,
       getPlugins,
+      getEnabledPlugins,
+      getDisabledPlugins,
 
       disablePlugin,
       enablePlugin
