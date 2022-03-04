@@ -14,7 +14,6 @@ const themes = window["themes"]?.list ?? [];
 const currentTheme = getThemeByName(theme);
 
 const colorsKey = ["backgroundColor", "borderBottomColor", "borderColor", "borderEndColor", "borderLeftColor", "borderRightColor", "borderStartColor", "borderTopColor", "color", "shadowColor", "textDecorationColor", "textShadowColor", "tintColor"];
-
 const colorsRegex = /\["(.*?)","(.*?)"\]/g;
 
 const ThemePatcher = create("Themer");
@@ -24,7 +23,7 @@ const ThemePatcher = create("Themer");
     ...ThemeColorMap.default,
     ...currentTheme["theme_color_map"]
   };
-}*/
+}
 
 ThemePatcher.instead(CreateThemedStyleSheet, "createThemedStyleSheet", (self, args, res) => {
   let style = res(...args);
@@ -37,7 +36,7 @@ ThemePatcher.instead(CreateStyleSheet, "createStyleSheet", (self, args, res) => 
   style = JSON.stringify(style);
 
   return JSON.parse(style);
-});
+});*/
 
 /**
  * Get the currently loaded theme name
