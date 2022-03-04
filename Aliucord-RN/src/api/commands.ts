@@ -5,31 +5,33 @@ const Patcher = create("aliucord-commands");
 
 const Commands = getModuleByProps("getBuiltInCommands");
 const Discovery = getModuleByProps("useApplicationCommandsDiscoveryState");
-const Icons = getModuleByProps("getIconURL");
+const Assets = getModuleByProps("getApplicationIconURL");
 
 let commands = [];
 
 export const section = {
   id: "aliucord",
   type: 1,
-  name: "Aliucord"
+  name: "Aliucord",
+  icon: "https://cdn.discordapp.com/icons/811255666990907402/912861e37f0efa5c77729592ea8f7b8f.png?size=256"
 };
 
 Patcher.after(Commands, "getBuiltInCommands", (_, args, res) => {
-  return [...res, ...commands];
+  return [...res, ...commands.values()];
 });
 
-Patcher.after(Icons, "getIconURL", (_, args) => {
-  if (args?.[1]?.id === "aliucord") {
-    return "https://cdn.discordapp.com/icons/811255666990907402/912861e37f0efa5c77729592ea8f7b8f.png?size=256";
+Patcher.after(Assets, "getApplicationIconURL", (_, [props], res) => {
+  if (props.id === "aliucord") {
+    return section.icon;
   }
 });
 
-Patcher.after(Discovery, "useApplicationCommandsDiscoveryState", (_, args, res) => {
+Patcher.after(Discovery, "useApplicationCommandsDiscoveryState", (_, [,,, isChat], res) => {
+  if (isChat !== false) return res;
+
   if (!res.discoverySections.find(d => d.key == section.id) && commands.length) {
     const cmds = [...commands.values()];
 
-    res.applicationCommandSections.push(section);
     res.discoveryCommands.push(...cmds);
     res.commands.push(...cmds.filter(cmd => !res.commands.some(e => e.name === cmd.name)));
 
@@ -40,6 +42,10 @@ Patcher.after(Discovery, "useApplicationCommandsDiscoveryState", (_, args, res) 
     });
 
     res.sectionsOffset.push(commands.length);
+  }
+
+  if (!res.applicationCommandSections.find(s => s.id == section.id) && commands.length) {
+    res.applicationCommandSections.push(section);
   }
 
   const index = res.discoverySections.findIndex(e => e.key === "-2");
