@@ -8,22 +8,11 @@
 
 %hook AppDelegate
 
+/*
 - (id)sourceURLForBridge:(id)arg1 {
 	id original = %orig;
-
-	if (checkForUpdate()) {
-		NSLog(@"Downloading Aliucord.js to %@", ALIUCORD_PATH);
-		BOOL success = downloadFile(ALIUCORD_URL, ALIUCORD_PATH);
-		
-		if (success) {
-			NSLog(@"Downloaded");
-		} else {
-			NSLog(@"Error downloading");
-		}
-	}
-
 	return original;
-}
+}*/
 
 - (void)startWithLaunchOptions:(id)options {
 	%orig;
@@ -34,6 +23,17 @@
 %hook RCTCxxBridge 
 
 - (void)executeApplicationScript:(NSData *)script url:(NSURL *)url async:(BOOL)async {
+	if (checkForUpdate()) {
+		NSLog(@"Downloading Aliucord.js to %@", ALIUCORD_PATH);
+		BOOL success = downloadFile(ALIUCORD_URL, ALIUCORD_PATH);
+		
+		if (success) {
+			NSLog(@"Downloaded");
+		} else {
+			alert(@"There was an error downloading Aliucord.js, please try again.");
+		}
+	}
+
 	if ([[url absoluteString] isEqualToString:@"tweak"]) {
 		%orig;
 		return;
@@ -64,9 +64,25 @@
 		return;
 	}
 
-	// Debug code
-	%orig([[NSString stringWithFormat:@"window.aliucord_debug = %s", IS_DEBUG ? "true" : "false"] dataUsingEncoding:NSUTF8StringEncoding], [NSURL URLWithString:@"preload"], false);
+	// Global values
+	NSString *debugCode = [NSString stringWithFormat:@"window.aliucord_debug = %s", IS_DEBUG ? "true" : "false"];
+	%orig([debugCode dataUsingEncoding:NSUTF8StringEncoding], [NSURL URLWithString:@"debug"], false);
 	%orig([@"window.plugins = {}; window.plugins.enabled = []; window.plugins.disabled = [];" dataUsingEncoding:NSUTF8StringEncoding], [NSURL URLWithString:@"plugins"], false);
+
+	NSArray *themesList = getThemes();
+	NSString *theme = getTheme();
+	if (theme == nil) {
+		theme = @"";
+	}
+
+	NSMutableArray *themes = [[NSMutableArray alloc] init];
+	for (NSString *theme in themesList) {
+		NSString *themeJson = getThemeJSON(theme);
+		[themes addObject:themeJson];
+	}
+
+	NSString *themesCode = [NSString stringWithFormat:@"window.themes = {}; window.themes.list = [%@]; window.themes.theme = \"%@\";", [themes componentsJoinedByString:@","], theme];
+	%orig([themesCode dataUsingEncoding:NSUTF8StringEncoding], [NSURL URLWithString:@"themes"], false);
 
 	// Inject Aliucord script
 	NSError* error = nil;
@@ -83,10 +99,9 @@
 	%orig([aliucordCode dataUsingEncoding:NSUTF8StringEncoding], [NSURL URLWithString:@"aliucord"], false);
 
 	// Load plugins
-	NSString* pluginsList = getPlugins();
-	NSArray *plugins = [pluginsList componentsSeparatedByString:@","];
+	NSArray* pluginsList = getPlugins();
 	int pluginID = 9001;
-	for (NSString *plugin in plugins) {
+	for (NSString *plugin in pluginsList) {
 		NSString *pluginPath = getPluginPath(plugin);
 		
 		%orig([[NSString stringWithFormat:@"window.plugins.%s.push('%@')", isEnabled(pluginPath) ? "enabled" : "disabled", getPluginName([NSURL URLWithString:plugin])] dataUsingEncoding:NSUTF8StringEncoding], [NSURL URLWithString:@"plugins"], false);
@@ -107,3 +122,8 @@
 }
 
 %end
+
+%ctor {
+	createFolder(PLUGINS_PATH);
+	createFolder(THEMES_PATH);
+}
