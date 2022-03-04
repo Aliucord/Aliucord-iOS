@@ -88,23 +88,12 @@ void handleCommand(NSDictionary *command) {
   NSString *uuid = [command objectForKey:@"id"];
   NSArray *params = [command objectForKey:@"params"];
 
-  // List available plugins
-  if ([name isEqualToString:@"list-plugins"]) {
-    createPluginsFolder();
-
-    NSString *plugins = getPlugins();
-    sendResponse(createResponse(uuid, plugins));
-    return;
-  }
-
   // Install a plugin
   if ([name isEqualToString:@"install-plugin"]) {
     NSURL *url = [NSURL URLWithString:params[0]];
     if (!url || ![[url pathExtension] isEqualToString:@"js"]) {
       return;
     }
-
-    createPluginsFolder();
 
     NSString *pluginName = getPluginName(url);
     NSString *title = [[NSString alloc] init];
@@ -161,25 +150,13 @@ void handleCommand(NSDictionary *command) {
   }
 
   if ([name isEqualToString:@"apply-theme"]) {
-    BOOL success = saveTheme(params[0], params[1]);
-
-    if (success) {
-      sendResponse(createResponse(uuid, @"Theme has been applied."));
-      return; 
-    }
-    
-    sendResponse(createResponse(uuid, @"Error applying theme."));
+    setTheme(params[0], params[1]);
+    sendResponse(createResponse(uuid, @"Theme has been applied."));
   }
 
   if ([name isEqualToString:@"remove-theme"]) {
-    BOOL success = deleteTheme();
-
-    if (success) {
-      sendResponse(createResponse(uuid, @"Theme has been removed. Use `/reload` to reload Discord."));
-      return; 
-    }
-    
-    sendResponse(createResponse(uuid, @"Error removing theme."));
+    setTheme(nil, nil);
+    sendResponse(createResponse(uuid, @"Theme has been removed."));
   }
 
   if ([name isEqualToString:@"enable-plugin"]) {
