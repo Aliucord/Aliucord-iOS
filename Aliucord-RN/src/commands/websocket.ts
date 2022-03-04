@@ -8,16 +8,24 @@ import { connectWebsocket, sendMessage } from "../utils/websocket";
  */
 const connect: Command = {
   id: "websocket-devtools",
-  name: "websocket",
-  description: "Connect to the websocket devtools.",
   applicationId: section.id,
+  
+  name: "websocket",
+  displayName: "websocket",
+
+  description: "Connect to the websocket server",
+  displayDescription: "Connect to the websocket server",
 
   type: ApplicationCommandType.Chat,
   inputType: ApplicationCommandInputType.BuiltIn,
 
   options: [{
     name: "host",
-    description: "Host of the debugger.",
+    displayName: "host",
+
+    description: "Host of the debugger",
+    displayDescription: "Host of the debugger",
+    
     type: ApplicationCommandOptionType.String,
     required: true,
   }],
@@ -33,9 +41,13 @@ const connect: Command = {
  */
 const dump: Command = {
   id: "dump-command",
-  name: "dump",
-  description: "Dump Discord's modules.",
   applicationId: section.id,
+
+  name: "dump",
+  displayName: "dump",
+
+  description: "Dump Discord's modules",
+  displayDescription: "Dump Discord's modules",
 
   type: ApplicationCommandType.Chat,
   inputType: ApplicationCommandInputType.BuiltIn,

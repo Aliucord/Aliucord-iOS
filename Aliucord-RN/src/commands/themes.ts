@@ -7,13 +7,24 @@ import { sendReply } from "../api/clyde";
 const themes: Command = {
   id: "list-themes",
   applicationId: section.id,
+
   name: "themes",
+  displayName: "themes",
+  
   description: "List available themes",
+  displayDescription: "List available themes",
+
   type: ApplicationCommandType.Chat,
   inputType: ApplicationCommandInputType.BuiltIn,
 
   execute: (args, message) => {
     const themes = listThemes();
+
+    if (themes.length === 0) {
+      sendReply(message.channel.id, "No themes installed.");
+      return;
+    }
+
     sendReply(message.channel.id, `**Installed themes (${themes.length})**: ${themes.join(', ')}`);
   }
 }
@@ -21,16 +32,33 @@ const themes: Command = {
 const apply: Command = {
   id: "apply-theme",
   applicationId: section.id,
+
   name: "apply",
+  displayName: "apply",
+  
   description: "Apply a theme",
+  displayDescription: "Apply a theme",
+
   type: ApplicationCommandType.Chat,
   inputType: ApplicationCommandInputType.BuiltIn,
   
   options: [{
     name: "name",
+    displayName: "name",
+
     description: "Theme's name",
+    displayDescription: "Theme's name",
+
     type: ApplicationCommandOptionType.String,
-    required: true
+    required: true,
+
+    choices: listThemes().map(t => {
+      return {
+        name: t,
+        displayName: t,
+        value: t
+      }
+    })
   }],
 
   execute: (args, message) => {
@@ -50,8 +78,13 @@ const apply: Command = {
 const clear: Command = {
   id: "clear-theme",
   applicationId: section.id,
+
   name: "clear",
+  displayName: "clear",
+
   description: "Remove applied theme",
+  displayDescription: "Remove applied theme",
+  
   type: ApplicationCommandType.Chat,
   inputType: ApplicationCommandInputType.BuiltIn,
 

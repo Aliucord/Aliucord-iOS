@@ -9,8 +9,13 @@ import { ApplicationCommandInputType, ApplicationCommandType, Command } from "al
  */
 const debug: Command = {
   id: "debug-command",
+
   name: "debug",
-  description: "Print out your device information.",
+  displayName: "debug",
+
+  description: "Print out your device information",
+  displayDescription: "Print out your device information",
+
   applicationId: section.id,
 
   type: ApplicationCommandType.Chat,
@@ -33,8 +38,13 @@ const debug: Command = {
  */
 const reload: Command = {
   id: "reload-command",
+
   name: "reload",
-  description: "Reload Discord.",
+  displayName: "reload",
+
+  description: "Reload Discord",
+  displayDescription: "Reload Discord",
+  
   applicationId: section.id,
 
   type: ApplicationCommandType.Chat,
@@ -50,8 +60,13 @@ const reload: Command = {
  */
 const token: Command = {
   id: "token-command",
+
   name: "token",
-  description: "Show your Discord'token.",
+  displayName: "token",
+
+  description: "Show your Discord's token",
+  displayDescription: "Show your Discord's token",
+  
   applicationId: section.id,
 
   type: ApplicationCommandType.Chat,

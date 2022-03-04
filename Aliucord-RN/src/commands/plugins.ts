@@ -1,10 +1,9 @@
-import { ApplicationCommandOptionType, ApplicationCommandInputType, ApplicationCommandType, Command } from "aliucord-api/commands";
-
 import { section } from "../api/commands";
 import { sendReply } from "../api/clyde";
-
 import { sendCommand } from "../utils/native";
-import { disablePlugin, enablePlugin } from "../api/plugin";
+
+import { disablePlugin, enablePlugin, getDisabledPlugins, getEnabledPlugins, getPlugins } from "../api/plugins";
+import { ApplicationCommandOptionType, ApplicationCommandInputType, ApplicationCommandType, Command } from "aliucord-api/commands";
 
 /**
  * List installed plugins
@@ -14,30 +13,38 @@ const list: Command = {
   applicationId: section.id,
 
   name: "plugins",
-  description: "List installed plugins.",
+  displayName: "plugins",
+  description: "List installed plugins",
+  displayDescription: "List installed plugins",
 
   type: ApplicationCommandType.Chat,
   inputType: ApplicationCommandInputType.BuiltIn,
 
   execute: (args, message) => {
     const channel = message.channel.id;
+    const pluginsList = getPlugins();
 
-    sendCommand("list-plugins", [], (pluginsList) => {
-      if (pluginsList === "") {
-        sendReply(channel, "No plugins installed.");
-        return;
-      }
+    if (pluginsList.length === 0) {
+      sendReply(channel, "No plugins installed.");
+      return;
+    }
 
-      const enabledPlugins: string[] = pluginsList.split(",").filter((p: string) => !p.includes(".disable")).map((p: string) => p.replace(".js", ""));
-      const disabledPlugins: string[] = pluginsList.split(",").filter((p: string) => p.includes(".disable")).map((p: string) => p.replace(".js.disable", ""));;
+    const enabledPlugins = getEnabledPlugins();
+    const disabledPlugins = getDisabledPlugins();
 
-      let plugins = `**Enabled plugins (${enabledPlugins.length})**:\n`;
+    let plugins = "";
+
+    if (enabledPlugins.length > 0) {
+      plugins = `**Enabled plugins (${enabledPlugins.length})**:\n`;
       plugins += `> ${enabledPlugins.join(", ")}\n`;
+    }
+
+    if (disabledPlugins.length > 0) {
       plugins += `**Disabled plugins (${disabledPlugins.length})**:\n`;
       plugins += `> ${disabledPlugins.join(", ")}`;
+    }
 
-      sendReply(channel, plugins);
-    });
+    sendReply(channel, plugins);
   },
 };
 
@@ -49,14 +56,21 @@ const install: Command = {
   applicationId: section.id,
 
   name: "install",
-  description: "Install a plugin.",
+  displayName: "install",
+
+  description: "Install a plugin",
+  displayDescription: "Install a plugin",
 
   type: ApplicationCommandType.Chat,
   inputType: ApplicationCommandInputType.BuiltIn,
 
   options: [{
     name: "plugin",
+    displayName: "plugin",
+
     description: "Plugin url",
+    displayDescription: "Plugin url",
+
     required: true,
     type: ApplicationCommandOptionType.String
   }],
@@ -79,16 +93,31 @@ const uninstall: Command = {
   applicationId: section.id,
 
   name: "uninstall",
-  description: "Uninstall a plugin.",
+  displayName: "uninstall",
+
+  description: "Uninstall a plugin",
+  displayDescription: "Uninstall a plugin",
 
   type: ApplicationCommandType.Chat,
   inputType: ApplicationCommandInputType.BuiltIn,
 
   options: [{
     name: "plugin",
+    displayName: "plugin",
+
     description: "Plugin name",
+    displayDescription: "Plugin name",
+    
+    type: ApplicationCommandOptionType.String,
     required: true,
-    type: ApplicationCommandOptionType.String
+
+    choices: getPlugins().map(p => {
+      return {
+        name: p.name,
+        displayName: p.name,
+        value: p.name
+      }
+    })
   }],
 
   execute: (args, message) => {
@@ -109,16 +138,31 @@ const disable: Command = {
   applicationId: section.id,
 
   name: "disable",
-  description: "Disable a plugin.",
+  displayName: "disable",
+
+  description: "Disable a plugin",
+  displayDescription: "Disable a plugin",
 
   type: ApplicationCommandType.Chat,
   inputType: ApplicationCommandInputType.BuiltIn,
 
   options: [{
     name: "plugin",
+    displayName: "plugin",
+
     description: "Plugin name",
+    displayDescription: "Plugin name",
+
+    type: ApplicationCommandOptionType.String,
     required: true,
-    type: ApplicationCommandOptionType.String
+
+    choices: getPlugins().map(p => {
+      return {
+        name: p.name,
+        displayName: p.name,
+        value: p.name
+      }
+    })
   }],
 
   execute: (args, message) => {
@@ -144,16 +188,31 @@ const enable: Command = {
   applicationId: section.id,
 
   name: "enable",
-  description: "Enable a plugin.",
+  displayName: "enable",
+
+  description: "Enable a plugin",
+  displayDescription: "Enable a plugin",
 
   type: ApplicationCommandType.Chat,
   inputType: ApplicationCommandInputType.BuiltIn,
 
   options: [{
     name: "plugin",
+    displayName: "plugin",
+
     description: "Plugin name",
+    displayDescription: "Plugin name",
+
+    type: ApplicationCommandOptionType.String,
     required: true,
-    type: ApplicationCommandOptionType.String
+
+    choices: getPlugins().map(p => {
+      return {
+        name: p.name,
+        displayName: p.name,
+        value: p.name
+      }
+    })
   }],
 
   execute: (args, message) => {
