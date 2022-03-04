@@ -5,7 +5,7 @@ const Patcher = create("aliucord-commands");
 
 const Commands = getModuleByProps("getBuiltInCommands");
 const Discovery = getModuleByProps("useApplicationCommandsDiscoveryState");
-const Assets = getModuleByProps("getApplicationIconURL");
+const Assets = getModuleByProps("getGuildTemplateIconURL");
 
 let commands = [];
 
@@ -16,15 +16,17 @@ export const section = {
   icon: "https://cdn.discordapp.com/icons/811255666990907402/912861e37f0efa5c77729592ea8f7b8f.png?size=256"
 };
 
+
 Patcher.after(Commands, "getBuiltInCommands", (_, args, res) => {
   return [...res, ...commands.values()];
 });
 
-Patcher.after(Assets, "getApplicationIconURL", (_, [props], res) => {
+Patcher.after(Assets.default, "getApplicationIconURL", (_, [props], res) => {
   if (props.id === "aliucord") {
     return section.icon;
   }
 });
+
 
 Patcher.after(Discovery, "useApplicationCommandsDiscoveryState", (_, [,,, isChat], res) => {
   if (isChat !== false) return res;
