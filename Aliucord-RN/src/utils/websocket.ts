@@ -41,7 +41,7 @@ function connectWebsocket(host: string) {
   });
   
   socket.addEventListener("error", (err: any) => {
-    console.log("Error with debug websocket: ", err.message)
+    console.log(`Error with debug websocket: ${err.message}`);
 
     showToast({
       content: "An error occured with the websocket connection."
@@ -49,7 +49,7 @@ function connectWebsocket(host: string) {
   });
 
   socket.addEventListener("close", (err: any) => {
-    console.log("Error with debug websocket: ", err.message)
+    console.log(`Error with debug websocket: ${err.message}`);
 
     showToast({
       content: "The websocket connection has been closed."
