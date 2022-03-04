@@ -1,3 +1,6 @@
+#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
+
 #import "Commands.h"
 #import "Plugins.h"
 #import "Utils.h"
@@ -7,7 +10,7 @@
 
 // Define the URL used to download Aliucord, also disable logs in release mode
 #ifdef DEBUG
-#		define ALIUCORD_URL @"http://127.0.0.1:8080/Aliucord.js"
+#		define ALIUCORD_URL @"http://192.168.1.150:8080/Aliucord.js"
 #   define IS_DEBUG true
 #		define NSLog(fmt, ... ) NSLog((@"[Aliucord-iOS] " fmt), ##__VA_ARGS__);
 #else 
