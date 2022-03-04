@@ -1,113 +1,91 @@
-import { getItem, removeItem, setItem } from "../api/storage";
 import { getModule, getModuleByProps } from "../utils/modules";
 import { sendCommand } from "./native";
+import { create } from "./patcher";
 
-const LocaleSettings = getModule(m =>m.default?.updateLocalSettings);
-const Theme = getModule(m =>m.default?.theme).default.theme;
+const CreateThemedStyleSheet = getModule(m => m.createThemedStyleSheet);
+const CreateStyleSheet = getModule(m => m.createStyleSheet);
 
-const ColorsModule = getModuleByProps("HEXColors");
-
+const Theme = getModule(m => m.default?.theme).default.theme;
 const ThemeColorMap = getModule(m => m.default?.HEADER_PRIMARY);
 const Colors = getModule(m => m.default?.PRIMARY_DARK);
 
-const themer = () => window["aliucord"].themer;
+const theme = window["themes"]?.theme ?? "";
+const themes = window["themes"]?.list ?? [];
+const currentTheme = getThemeByName(theme);
 
-/**
- * Prepare the theme engine
- */
- async function prepareThemer() {
-  let theme = await getItem("theme");
-  if (theme === null) return;
+const colorsKey = ["backgroundColor", "borderBottomColor", "borderColor", "borderEndColor", "borderLeftColor", "borderRightColor", "borderStartColor", "borderTopColor", "color", "shadowColor", "textDecorationColor", "textShadowColor", "tintColor"];
 
-  theme = JSON.parse(theme);
+const colorsRegex = /\["(.*?)","(.*?)"\]/g;
 
-  applyColours(theme);
-  themer().theme = theme.name;
-}
+const ThemePatcher = create("Themer");
+
+/*if (theme !== "") {
+  ThemeColorMap.default = {
+    ...ThemeColorMap.default,
+    ...currentTheme["theme_color_map"]
+  };
+}*/
+
+ThemePatcher.instead(CreateThemedStyleSheet, "createThemedStyleSheet", (self, args, res) => {
+  let style = res(...args);
+  style = JSON.stringify(style);
+  return JSON.parse(style);
+});
+
+ThemePatcher.instead(CreateStyleSheet, "createStyleSheet", (self, args, res) => {
+  let style = res(...args);
+  style = JSON.stringify(style);
+
+  return JSON.parse(style);
+});
 
 /**
  * Get the currently loaded theme name
  */
 function getTheme() {
-  return themer().theme;
+  return theme;
 }
 
 /**
  * Get a theme by name
  */
 function getThemeByName(name) {
-  return themer().themes.find(theme => theme.name === name);
+  return themes.find(t => t.name === name);
 }
 
 /**
  * List registered themes
  */
 function listThemes() {
-  return themer().themes.map(theme => theme.name);
-}
-
-/**
- * Apply Theme's colours
- */
-function applyColours(theme) {
-  const colorMap = {
-    ...ThemeColorMap.default,
-    ...theme.theme_color_map
-  };
-
-  const colors = {
-    ...Colors.default,
-    ...theme.colors
-  };
-
-  ThemeColorMap.default = colorMap;
-  Colors.default = colors;
-  ColorsModule.Colors = colors;
-
-  LocaleSettings.default.updateLocalSettings({
-    theme: Theme,
-    sync: false,
-  });
+  return themes.map(t => t.name);
 }
 
 /**
  * Apply a theme to Discord
  */
-async function applyTheme(name) {
-  themer().theme = name;
-  const theme = getThemeByName(name);
-
-  setItem("theme", JSON.stringify(theme));
-  applyColours(theme);
-
-  const response = await sendCommand("apply-theme", [Theme, JSON.stringify(theme.theme_color_map)]);
-  return response.data;
-}
-
-/**
- * Register a theme
- */
-function registerTheme(theme) {
-  themer().themes.push(theme);
+async function applyTheme(name): Promise<string> {
+  return new Promise((resolve, reject) => {
+    sendCommand("apply-theme", [name, Theme], (data) => {
+      resolve(data);
+    });
+  });
 }
 
 /**
  * Remove the currently applied theme
  */
-async function removeTheme() {
-  themer().theme = "";
-  await removeItem("theme");
-  
-  const response = await sendCommand("remove-theme");
-  return response.data;
+async function removeTheme(): Promise<string> {
+  return new Promise((resolve, reject) => {
+    sendCommand("remove-theme", [], (data) => {
+      resolve(data);
+    });
+  });
 }
 
 export {
-  prepareThemer,
   applyTheme,
   getTheme,
   getThemeByName,
   listThemes,
-  registerTheme,
   removeTheme
 }
