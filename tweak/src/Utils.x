@@ -32,7 +32,7 @@ BOOL checkForUpdate() {
 // Download a file 
 BOOL downloadFile(NSString *source, NSString *dest) {
 	NSURL *url = [NSURL URLWithString:source];
-  NSLog(@"downloadFile -> url: %@", url.absoluteString);
+  NSLog(@"downloadFile: %@", url.absoluteString);
 	NSData *data = [NSData dataWithContentsOfURL:url];
 
 	if (data) {
@@ -47,6 +47,41 @@ BOOL downloadFile(NSString *source, NSString *dest) {
 BOOL checkFileExists(NSString *path) {
   NSFileManager *fileManager = [NSFileManager defaultManager];
   return [fileManager fileExistsAtPath:path];
+}
+
+// Create a folder 
+BOOL createFolder(NSString *path) {
+  NSFileManager *fileManager = [NSFileManager defaultManager];
+
+  if ([fileManager fileExistsAtPath:path]) {
+    return true;
+  }
+
+  NSError *err;
+  [fileManager
+    createDirectoryAtPath:path
+    withIntermediateDirectories:false
+    attributes:nil
+    error:&err];
+
+  if (err) {
+    return false;
+  }
+
+  return true;
+}
+
+// Read a folder
+NSArray* readFolder(NSString *path) {
+  NSFileManager *fileManager = [NSFileManager defaultManager];
+
+  NSError *err;
+  NSArray *files = [fileManager contentsOfDirectoryAtPath:path error:&err];
+  if (err) {
+    return [[NSArray alloc] init];
+  }
+  
+  return files;
 }
 
 // Create an alert prompt
@@ -91,15 +126,4 @@ void confirm(NSString *title, NSString *message, void (^confirmed)(void)) {
 
   UIViewController *viewController = [[[[UIApplication sharedApplication] delegate] window] rootViewController];
   [viewController presentViewController:alert animated:YES completion:nil];
-}
-
-// Inject code into Discord
-void injectCode(NSString *code) {
-  UIWindow *window = [[[UIApplication sharedApplication] delegate] window];
-  RCTRootView *rootView = (RCTRootView *)window.rootViewController.view;
-  RCTCxxBridge *bridge = rootView.bridge.batchedBridge;
-
-  NSData *sourceCodeData = [code dataUsingEncoding:NSUTF8StringEncoding];
-
-  [bridge executeApplicationScript:sourceCodeData url:[NSURL URLWithString:@"tweak"] async:false];
 }
