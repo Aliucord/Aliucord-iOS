@@ -15,7 +15,7 @@ function prepareWebsocket() {
   };
 
   if (window["aliucord_debug"] === true) {
-    connectWebsocket("localhost:9090");
+    connectWebsocket("192.168.1.150:9090");
   }
 }
 
