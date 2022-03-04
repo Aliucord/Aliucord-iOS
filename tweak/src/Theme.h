@@ -1,5 +1,9 @@
-#define THEME_PATH [NSString stringWithFormat:@"%@/%@", NSHomeDirectory(), @"Documents/theme.json"]
+#define THEMES_PATH [NSString stringWithFormat:@"%@/%@", NSHomeDirectory(), @"Documents/Themes"]
 
-void loadTheme();
-BOOL saveTheme(NSString *theme, NSString *json);
+NSArray* getThemes();
+NSString* getTheme();
+int getMode();
+NSDictionary* getThemeMap();
+NSString* getThemeJSON(NSString *name);
+void setTheme(NSString *name, NSString *theme);
 BOOL deleteTheme();
