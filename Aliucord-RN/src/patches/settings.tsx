@@ -31,7 +31,7 @@ function patchSettings() {
 
       const aliucordSection = 
         <><FormSection title="Aliucord">
-          <FormRow label="Alicuord" trailing={<FormLabel text={version}/>} onPress={() => {
+          <FormRow label="Aliucord" trailing={<FormLabel text={version}/>} onPress={() => {
             openURL(`https://github.com/Aliucord/Aliucord-iOS/commit/${version}`);
           }}></FormRow>
           <FormDivider />
