@@ -2,7 +2,7 @@
 #import <UIKit/UIKit.h>
 #import "Aliucord.h"
 
-NSMutableDictionary *colors;
+NSDictionary *colors = nil;
 
 // Convert an UIColor element to a hex string
 NSString* hexStringFromColor(UIColor * color) {
@@ -52,74 +52,99 @@ UIColor* colorFromRGBAString(NSString *rgbaString) {
   return [UIColor colorWithRed:[[rgbaValues objectAtIndex:0] floatValue]/255.0f green:[[rgbaValues objectAtIndex:1] floatValue]/255.0f blue:[[rgbaValues objectAtIndex:2] floatValue]/255.0f alpha:[[rgbaValues objectAtIndex:3] floatValue]];
 }
 
-// Load the theme 
-void loadTheme() {
-  if (!checkFileExists(THEME_PATH)) {
+// Get the installed themes
+NSArray* getThemes() {
+  NSArray *files = readFolder(THEMES_PATH);
+  NSMutableArray *themes = [[NSMutableArray alloc] init];
+  for (NSString *theme in files) {
+    if (![theme containsString:@".json"]) {
+      continue;
+    }
+
+    [themes addObject:[theme stringByReplacingOccurrencesOfString:@".json" withString:@""]];
+  }
+
+  return [themes copy];
+}
+
+// Get the theme name
+NSString* getTheme() {
+  NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+  NSString *theme = [userDefaults stringForKey:@"theme"];
+
+  return theme;
+}
+
+// Get the theme mode
+int getMode() {
+  NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+  int mode = [userDefaults integerForKey:@"theme_mode"];
+
+  return mode;
+}
+
+// Get the theme map
+NSDictionary* getThemeMap() {
+  NSString *name = getTheme();
+  if (name == nil) {
+    return nil;
+  }
+
+  NSString *themeJson = getThemeJSON(name);
+  if (themeJson == nil) {
+    return nil;
+  }
+
+  NSError *error;
+  NSMutableDictionary *theme = [NSJSONSerialization JSONObjectWithData:[themeJson dataUsingEncoding:NSUTF8StringEncoding] options:0 error:&error];
+  if (error) {
+    return nil;
+  }
+
+  int mode = getMode();
+  NSDictionary *themeColorMap = theme[@"theme_color_map"];
+  NSMutableDictionary *themeMap = [[NSMutableDictionary alloc] init];
+  for (NSString* colourName in themeColorMap) {
+    NSString *colour = themeColorMap[colourName][mode];
+    [themeMap setObject:colour  forKey:colourName];
+  }
+
+  return [themeMap copy];
+}
+
+// Get the theme file daata
+NSString* getThemeJSON(NSString *name) {
+  NSString *themeFile = [NSString stringWithFormat:@"%@/%@.json", THEMES_PATH, name];
+  if (!checkFileExists(themeFile)) {
+    setTheme(nil, nil);
+    return nil;
+  }
+
+  NSData *data = [NSData dataWithContentsOfFile:themeFile];
+  return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+}
+
+// Set the theme name
+void setTheme(NSString *name, NSString *mode) {
+  NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+
+  if (name == nil && mode == nil) {
+    [userDefaults removeObjectForKey:@"theme"];
+    [userDefaults removeObjectForKey:@"theme_mode"];
+    colors = [[NSMutableDictionary alloc] init];
     return;
   }
 
-  colors = [[NSMutableDictionary alloc] init];
-  NSData *data = [NSData dataWithContentsOfFile:THEME_PATH];
-  NSDictionary *theme = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil];
-
-  for (id key in theme) {
-    id value = [theme objectForKey:key];
-    [colors setObject:value forKey:key];
-  }
-}
-
-// Save the theme
-BOOL saveTheme(NSString *theme, NSString *json) {
-  int pos = 0;
-  if ([theme isEqualToString:@"dark"]) {
-    pos = 1;
-  }
-
-  NSDictionary *values = [NSJSONSerialization
-                          JSONObjectWithData: [json dataUsingEncoding:NSUTF8StringEncoding]
-                          options:kNilOptions
-                          error:nil];
-
-  NSMutableDictionary *chatTheme = [[NSMutableDictionary alloc] init];
-
-  for (id key in values) {
-    id value = values[key][pos];
-    [chatTheme setObject:value forKey:key];
-  }
-
-  NSData *chatThemeData = [NSJSONSerialization
-                            dataWithJSONObject:chatTheme
-                            options:kNilOptions
-                            error:nil];
-
-  BOOL success = [chatThemeData writeToFile:THEME_PATH atomically:FALSE];
-
-  if (success) {
-    loadTheme();
-  }
-
-  return success;
-}
-
-// Delete the theme
-BOOL deleteTheme() {
-  colors = [[NSMutableDictionary alloc] init];
-
-  NSFileManager *fileManager = [NSFileManager defaultManager];
-  NSError *err;
-  [fileManager
-    removeItemAtPath:THEME_PATH
-    error:&err];
-
-  if (err) {
-    return false;
-  }
-
-  return true;
+  [userDefaults setObject:name forKey:@"theme"];
+  [userDefaults setInteger:[mode intValue] forKey:@"theme_mode"];
 }
 
 // Get a color
 UIColor* getColor(NSString *name) {
+  if (colors == nil) {
+    colors = getThemeMap();
+  }
+
   if (![colors objectForKey:name]) {
     return NULL;
   }
@@ -865,7 +890,3 @@ UIColor* getColor(NSString *name) {
 }
 
 %end
-
-%ctor {
-  loadTheme();
-}
