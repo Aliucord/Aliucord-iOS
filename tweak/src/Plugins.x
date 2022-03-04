@@ -2,9 +2,9 @@
 
 // Get the path of a plugin via it's name
 NSString* getPluginPath(NSString *name) {
-  NSString* plugins = getPlugins();
+  NSArray* plugins = getPlugins();
 
-  for (NSString *plugin in [plugins componentsSeparatedByString:@","]) {
+  for (NSString *plugin in plugins) {
     if ([plugin containsString:name]) {
       return [NSString stringWithFormat:@"%@/%@", PLUGINS_PATH, plugin];
     }
@@ -19,41 +19,9 @@ NSString* getPluginName(NSURL *url) {
   return [stripped stringByReplacingOccurrencesOfString:@".js" withString:@""];
 }
 
-// Create the plugins folder
-BOOL createPluginsFolder() {
-  NSFileManager *fileManager = [NSFileManager defaultManager];
-
-  if ([fileManager fileExistsAtPath:PLUGINS_PATH]) {
-    return false;
-  }
-
-  NSError *err;
-  [fileManager
-    createDirectoryAtPath:PLUGINS_PATH
-    withIntermediateDirectories:false
-    attributes:nil
-    error:&err];
-
-  if (err) {
-    return false;
-  }
-
-  return true;
-}
-
 // Get the list of installed plugins
-NSString* getPlugins() {
-  NSFileManager *fileManager = [NSFileManager defaultManager];
-
-  NSError *err;
-  NSArray *files = [fileManager
-                      contentsOfDirectoryAtPath:PLUGINS_PATH
-                      error:&err];
-  
-  if (err || [files count] == 0) {
-    return @"";
-  }
-
+NSArray* getPlugins() {
+  NSArray *files = readFolder(PLUGINS_PATH);
   NSMutableArray *plugins = [[NSMutableArray alloc] init];
   for (NSString *plugin in files) {
     if (![plugin containsString:@".js"]) {
@@ -63,7 +31,7 @@ NSString* getPlugins() {
     [plugins addObject:plugin];
   }
 
-  return [plugins componentsJoinedByString:@","];
+  return [plugins copy];
 }
 
 // Check if a plugin exists
@@ -86,9 +54,6 @@ BOOL installPlugin(NSURL *url) {
   if ([dest isEqualToString:@""]) {
     dest = [NSString stringWithFormat:@"%@/%@.js", PLUGINS_PATH, pluginName];
   }
-  
-  NSLog(@"pluginName %@", pluginName);
-  NSLog(@"dest %@", dest);
 
   BOOL success = downloadFile(url.absoluteString, dest);
   
@@ -114,6 +79,7 @@ BOOL deletePlugin(NSString *name) {
   return true;
 }
 
+// Disable a plugin
 BOOL disablePlugin(NSString *name) {
   NSString *path = getPluginPath(name);
 
@@ -135,6 +101,7 @@ BOOL disablePlugin(NSString *name) {
   return true;
 }
 
+// Enable a plugin
 BOOL enablePlugin(NSString *name) {
   NSString *path = getPluginPath(name);
   
@@ -156,6 +123,7 @@ BOOL enablePlugin(NSString *name) {
   return true;
 }
 
+// Check if a plugin is enabled
 BOOL isEnabled(NSString *name) {
  return ![name containsString:@".disable"];
 }
@@ -167,7 +135,7 @@ NSString* wrapPlugin(NSString *code, int pluginID, NSString *name) {
       "try {"\
         "%@"\
       "} catch(err) {"\
-        "console.error('Fatal error with %@:', err);"\
+        "console.error(`Fatal error with %@: ${err}`);"\
       "}"\
     "}, %d, []);"\
     "__r(%d);", code, name, pluginID, pluginID
